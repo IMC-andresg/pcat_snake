@@ -1,0 +1,246 @@
+{
+	"OM_THIS_MONTH": "./files/202012/All_202012_legacy_license_offermatrix_sheets.xlsx",
+	"OM_LAST_MONTH": "./files/202011/OM 202011 reworked by MicrOMTool in November.xlsx",
+	"OM_TWO_MONTHS": "./files/202010/OM 202010 reworked by MicrOMTool in October.xlsx",
+
+	"PL_THIS_MONTH": "./files/202012/December-2020-Cloud-Reseller-Pricelist.xlsx",
+	"PL_NEXT_MONTH_PREVIEW": "./files/202012/January-2021-Cloud-Reseller-Pricelist.xlsx",
+	"PL_LAST_MONTH": "./files/202011/November-2020-Cloud-Reseller-Pricelist.xlsx",
+	"PL_TWO_MONTHS": "./files/202010/October-2020-Cloud-Reseller-Pricelist.xlsx",
+
+	"OM_OUTPUT": "./files/202012/OM 202012 reworked by MicrOMTool in December.xlsx",
+
+	"SW_THIS_MONTH": "./files/202012/Software-Subscriptions-CSP-Commercial-Price-List-December-2020.xlsx",
+	"SW_LAST_MONTH": "./files/202011/SW 202011 reworked by MicrOMTool in November.xlsx",
+	"SW_TWO_MONTHS": "./files/202010/SW 202010 reworked by MicrOMTool in October.xlsx",
+
+	"SW_OUTPUT": "./files/202012/SW 202012 reworked by MicrOMTool in December.xlsx",
+
+	"EXTENDED_RELATIONS_MATRIX": false,
+	"EXTENDED_COUNTRY_MATRIX": false,
+	"INCLUDE_LONG_TERM_SKUS": false,
+	"REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS": true,
+	"REMOVE_CORPORATE_ADDONS_WHEN_CHARITY_EXISTS": true,
+
+	"ALLOWED_DURATIONS": ["1 Month", "6 Months", "1 Year", "6 Years"],
+
+	"ALLOWED_RELATIONS": {
+		"Corporate": ["Corporate"],
+		"Academic": ["Academic", "Corporate"],
+		"Charity": ["Charity", "Corporate"],
+		"Government": ["Government", "Corporate"]
+	},
+
+	"MAX_LENGTH_SHORT_NAME": 41,
+	"MAX_LENGTH_ADDON_SHORT_NAME": 70,
+
+	"CSP_TAX_CATEGORY": "81112106",
+	"SW_SUBSCRIPTIONS_TAX_CATEGORY": "81112500",
+	"PERPETUAL_SW_TAX_CATEGORY": "",
+
+	"T27": ["Brazil", "Canada", "Chile", "Colombia", "Mexico", "United States", "Australia", "New Zealand", "Hong Kong SAR", "India", "Malaysia", "Singapore", "Austria", "Belgium", "Switzerland", "Germany", "Spain", 
+		"France", "Italy", "United Arab Emirates", "Netherlands", "Sweden", "Turkey", "United Kingdom", "Morocco", "Norway", "Saudi Arabia"],
+
+	"SERVICE_PROVIDER_COUNTRIES": ["Botswana", "Kenya", "Mauritius", "Rwanda", "South Africa", "Tanzania", "Uganda", "Zambia", "Zimbabwe", "Peru", "Ecuador", "Japan", "Korea"],
+
+	"MICROSOFT_LIMITS_TO_VALIDATE": ["Min Seat Count", "Max Seat Count", "Offer Limit"],
+	"MICROSOFT_FIELDS_TO_VALIDATE": ["Offer Display Description", "Parent/Child"],
+
+	"SKU_GROUPS": {
+		"Dynamics 365 Charity": {
+			"CMP Category": "Dynamics Flat Catalogue Charity",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Charity)",
+			"shortname": "D365 Charity"
+		},
+		"Dynamics 365 Corporate": {
+			"CMP Category": "Dynamics Flat Catalogue Corporate",
+			"Parent Category": "Business Applications",
+			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Corporate)",
+			"shortname": "D365 Corporate"
+		},
+		"Dynamics 365 Education": {
+			"CMP Category": "Dynamics Flat Catalogue Education",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Education)",
+			"shortname": "D365 Education"
+		},
+		"Dynamics 365 GCC": {
+			"CMP Category": "Dynamics Flat Catalogue Government",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Government)",
+			"shortname": "D365 GCC"
+		},
+		"EM+S Charity": {
+			"CMP Category": "Enterprise Mobility Suite",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Enterprise Mobility Suite (Charity)",
+			"shortname": "EM+S Charity"
+		},
+		"EM+S Corporate": {
+			"CMP Category": "Enterprise Mobility Suite",
+			"Parent Category": "Security",
+			"Sales Category": "Microsoft - Enterprise Mobility Suite (Corporate)",
+			"shortname": "EM+S Corporate"
+		},
+		"EM+S Education": {
+			"CMP Category": "Enterprise Mobility Suite",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Enterprise Mobility Suite (Education)",
+			"shortname": "EM+S Education"
+		},
+		"EM+S GCC": {
+			"CMP Category": "Enterprise Mobility Suite",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Enterprise Mobility Suite (Government)",
+			"shortname": "EM+S GCC"
+		},
+		"Microsoft 365 Charity": {
+			"CMP Category": "Microsoft 365 Charity",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft 365 (Charity)",
+			"shortname": "M365 Charity"
+		},
+		"Microsoft 365 Corporate": {
+			"CMP Category": "Microsoft 365 Business",
+			"Parent Category": "Business Applications",
+			"Sales Category": "Microsoft 365 (Corporate)",
+			"shortname": "M365 Corporate"
+		},
+		"Microsoft 365 Education": {
+			"CMP Category": "Microsoft 365 Education",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft 365 (Education)",
+			"shortname": "M365 Education"
+		},
+		"Microsoft 365 GCC": {
+			"CMP Category": "Microsoft 365 Enterprise",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft 365 (Government)",
+			"shortname": "M365 GCC"
+		},
+		"Office 365 Charity": {
+			"CMP Category": "Communication and Collaboration Tools",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Communication and Collaboration Tools (Charity)",
+			"shortname": "O365 Charity"
+		},
+		"Office 365 Corporate": {
+			"CMP Category": "Communication and Collaboration Tools",
+			"Parent Category": "Communication and Collaboration",
+			"Sales Category": "Microsoft - Communication and Collaboration Tools (Corporate)",
+			"shortname": "O365 Corporate"
+		},
+		"Office 365 Education": {
+			"CMP Category": "Communication and Collaboration Tools",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Communication and Collaboration Tools (Education)",
+			"shortname": "O365 Education"
+		},
+		"Office 365 GCC": {
+			"CMP Category": "Communication and Collaboration Tools",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Communication and Collaboration Tools (Government)",
+			"shortname": "O365 GCC"
+		},
+		"Windows 10 Charity": {
+			"CMP Category": "Windows 10 Charity",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Windows 10 Enterprise (Charity)",
+			"shortname": "W10 Charity"
+		},
+		"Windows 10 Corporate": {
+			"CMP Category": "Windows 10 Enterprise",
+			"Parent Category": "Business Applications",
+			"Sales Category": "Microsoft - Windows 10 Enterprise (Corporate)",
+			"shortname": "W10 Corporate"
+		},
+		"Windows 10 Education": {
+			"CMP Category": "Windows 10 Education",
+			"Parent Category": "Industry Solutions",
+			"Sales Category": "Microsoft - Windows 10 Enterprise (Education)",
+			"shortname": "W10 Education"
+		},
+		"Trials": {"shortname": "Trials"}
+	},
+
+	"OM_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "In Next Month OM", "Manually Added", "Offer Display Name", "Provisioning ID", "Group", "Parent/Child", "CMP Category", "Parent Category",
+		"Sales Category", "Tax Category", "Offer Type", "Duration", "Billing Frequency", "Min Seat Count", "Max Seat Count", "Offer Limit", "Offer Limit Scope",
+		"Depends On", "Can Convert To", "Offer URI", "LearnMoreLink", "Offer Display Description", "Allowed Countries", "GUID + Offer Name",
+		"GUID + Offer Name in last month OM", "GUID in last month OM", "Name Change", "Old Name", "License Type", "In Two Months Ago PL", "In Last Month PL", "In current PL",
+		"In Next Month PL", "Shortened Names", "Length", "Microsoft Change", "Connect Product Id", "Connect product name", "Connect product category", "Connect annual item Id", "Connect annual item name", "Connect monthly item Id", "Connect monthly item name",
+		"Connect onetime item Id", "Connect onetime item name"],
+
+	"APS_RELATIONS_HEADERS": ["Two Months Ago", "Last Month", "ParentId", "Reasons", "Parent In OM", "Parent Group", "Parent License", "Parent/Child", "Parent CMP Category",
+		"Parent Sales Category", "ParentName", "ParentProvisioningId", "ChildId", "Child License", "ChildName", "ChildProvisioningId", "Parent Change",
+		"Child Change", "Verification", "In next month"],
+
+	"UPGRADES_HEADERS": ["Two Months Ago", "Last Month", "Offer Id origin", "Offer Display Name", "Offer Id destination", "Can Convert To"],
+
+	"COUNTRIES_HEADERS": ["Last Month", "New Offer ID", "In OM", "New Country", "CMP", "In Next Month", "Offer Next Month", 
+		"Country Change Next Month", "OfferID", "OfferName", "Country", "Group", "Parent/Child", "CMP Category", "Parent Category", "Sales Category"],
+
+	"APS_STRUCTURE_HEADERS": ["OfferID", "RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "Parent Name Short", "Offer Display Name", "CMP Category",
+		"SKU In Last Month OM", "Relation In Last Month", "Name Change"],
+
+	"SW_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "Offer Display Name", "Group", "Parent/Child", "CMP Category", "Parent Category",
+		"Sales Category", "Tax Category", "Duration", "Billing Frequency", "Min Seat Count", "Max Seat Count", "Allowed Countries", "Shortened Names",
+		"Length", "Connect Product Id", "Connect product name", "Connect product category", "Connect onetime item Id", "Connect onetime item name"],
+
+	"CONNECT_RELATIONS_HEADERS": ["Two Months Ago", "Last Month", "ParentId", "ParentName", "Parent License", "ChildId", "ChildName", "Child License", "Parent Change", "Child Change"],
+
+	"CONNECT_STRUCTURE_HEADERS": ["OfferID", "RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "Parent Name Short", "Offer Display Name", "Connect product category", "Connect Product Id",
+		"Connect annual item Id", "Connect annual item name", "Connect monthly item Id", "Connect monthly item name", "SKU In Last Month OM", "Relation In Last Month", "Name Change"],
+
+	"OM_ADD_THIS_MONTH_HEADERS": ["OfferID", "Offer Display Name", "Group"],
+
+	"OM_DEL_THIS_MONTH_HEADERS": ["OfferID", "Offer Display Name", "Group"],
+
+	"OM_NAME_CHANGES_THIS_MONTH_HEADERS": ["OfferID", "Offer Display Name", "Group", "Old Name"],
+
+	"OM_MICROSOFT_ERRORS_HEADERS": ["OfferID", "Offer Display Name", "In current PL", "In Next Month PL", "In Last Month PL", "In Two Months Ago PL"],
+
+	"COUNTRY_AVAIABILITY_HEADERS": ["Offer Display Name"],
+
+	"SW_GROUPS": {
+		"Software Subscriptions Corporate": {
+			"CMP Category": "Microsoft - Software Subscriptions in CSP",
+			"Parent Category": "Business Applications",
+			"Sales Category": "Microsoft - Software Subscriptions in CSP (Corporate)"
+		}
+	},
+
+	"CONNECT_TOKEN": "ApiKey INSERT-YOUR-CONNECT-API-KEY-HERE",
+
+	"CONNECT_URLS": {
+		"ITEMS": "https://api.connect.cloud.im/public/v1/products/<PRODUCT_ID>/items", 
+		"PRODUCT": "https://api.connect.cloud.im/public/v1/products/<PRODUCT_ID>"
+	},
+
+	"CONNECT_PARAMS": {
+		"LIMIT": 100
+	},
+
+	"CONNECT_PRODUCTS": {
+		"PRD-812-360-509": {"License type": "Corporate"},
+		"PRD-612-640-519": {"License type": "Academic"},
+		"PRD-721-371-117": {"License type": "Charity"},
+		"PRD-245-602-328": {"License type": "Corporate"},
+		"PRD-546-033-870": {"License type": "Academic"},
+		"PRD-757-861-019": {"License type": "Charity"},
+		"PRD-812-485-361": {"License type": "Corporate"},
+		"PRD-376-475-231": {"License type": "Corporate"}
+	},
+
+	"DEFAULT_VALUES": {
+		"YES": "YES",
+		"NO": "NO",
+		"T27": "T27",
+		"OTHER": "OTHER",
+		"MICROSOFT_ERROR": "Microsoft Error",
+		"PARENT_NOT_IN_OM": "Parent NOT in OM",
+		"CORPORATE": "CORPORATE",
+		"YEARLY": "yearly",
+		"MONTHLY": "monthly"
+	}
+}
