@@ -1,2 +1,5 @@
 files
 config.json
+db.json
+*.log
+.vscode

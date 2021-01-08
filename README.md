@@ -28,7 +28,7 @@ For more information, please refer to the Sharepoint [page](https://ingrammicro.
 To install python dependencies:
 
 ```
-pip install -r requirements.tx
+pip install -r requirements.txt
 ```
 
 # Usage
@@ -41,3 +41,11 @@ pip install -r requirements.tx
 ```
 python SnakeTool.py
 ```
+
+## Local DB
+
+The tool stores answers for SKU groups and shortnames so that you don't have to answer them again in subsequent runs. To remove the saved answers, remove the db.json file. You can also inspect this file and make changes it as needed. 
+
+## Loggin
+
+The tool generates a log file for each run. Any errors will be logged to this file. The file name contains the current timestamp. Example: `snake_20210107-173001.log`. 

@@ -1,19 +1,50 @@
 import json
-import pandas
-import tabulate
+import logging
 import os
+import time
 from pathlib import Path
+
+import pandas
 import requests
+import tabulate
+from tinydb import Query, TinyDB
+
+# Load local db and logging 
+db = TinyDB('db.json')
+logging.basicConfig(filename="snake_{0}.log".format(time.strftime("%Y%m%d-%H%M%S")), level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 # Read config file ##########################################################################################################################################################################
 with open('config.json') as json_data_file:
 	config = json.load(json_data_file)
 #############################################################################################################################################################################################
 
-
 # Functions definition ######################################################################################################################################################################
+
+def lookup_sku_group(sku):
+	info_query = Query()
+	info_db_result = db.search((info_query.sku == sku) & (info_query.group.exists()))
+	if info_db_result:
+		return info_db_result[0]['group']
+
+def lookup_sku_shortname(sku):
+	info_query = Query()
+	info_db_result = db.search((info_query.sku == sku) & (info_query.sku_short_name.exists()))
+	if info_db_result:
+		return info_db_result[0]['sku_short_name']
+
+def save_sku_group(sku, sku_name, group):
+	upsert_query = Query()
+	db.upsert({'sku': sku, 'sku_name': sku_name, 'group': group}, upsert_query.sku == sku)
+
+def save_sku_shortname(sku, sku_name, sku_short_name):
+	upsert_query = Query()
+	db.upsert({'sku': sku, 'sku_name': sku_name, 'sku_short_name': sku_short_name}, upsert_query.sku == sku)
+
 def request_info(name, choices=None, sku=None, sku_name=None, sku_pl_two_months_ago=None, sku_pl_last_month=None, sku_pl_current=None, sku_pl_next_month=None, sku_license_type=None):
 	if name in ['Group', 'CMP Category', 'Parent Category', 'Sales Category']:
+		info = lookup_sku_group(sku)
+		if info: return info
+
 		choices.sort()
 		info = ""
 		while info not in choices:
@@ -26,8 +57,12 @@ def request_info(name, choices=None, sku=None, sku_name=None, sku_pl_two_months_
 			print(tabulate.tabulate([[sku_license_type, sku_pl_two_months_ago, sku_pl_last_month, sku_pl_current, sku_pl_next_month]], headers=['SKU license type', 'In Two Months Ago PL', 'In Last Month PL', 'In current PL', 'In Next Month PL'], tablefmt="psql", stralign="center"), end='\n\n')
 			print("Available options are:\n\n- {0}".format("\n- ".join(choices)), end='\n\n')
 			info = input("Selection: ").strip()
+		save_sku_group(sku, sku_name, info)
 		return info
 	elif name in ['Shortened Names']:
+		short_name = lookup_sku_shortname(sku)
+		if short_name: return short_name
+
 		short_name = ""
 		# while short_name == "" or len(short_name) > config['MAX_LENGTH_SHORT_NAME']:
 		while short_name == "":
@@ -38,11 +73,13 @@ def request_info(name, choices=None, sku=None, sku_name=None, sku_pl_two_months_
 			print("Enter \"Shortened name\" value for \"{0}\"".format(sku_name), end='\n\n')
 			entered_text = input("Shortened name [Default: \"{0}\"]: ".format(sku_name)).strip()
 			short_name = sku_name if entered_text == "" else entered_text
+		save_sku_shortname(sku, sku_name, short_name)
 		return short_name
 #############################################################################################################################################################################################
 
 
 # Load Connect items ########################################################################################################################################################################
+logging.info("Loading Connect items")
 connect_items = pandas.DataFrame()
 headers = {'Authorization': config['CONNECT_TOKEN']}
 for product in config['CONNECT_PRODUCTS']:
@@ -117,6 +154,7 @@ for sku, sku_data in om_last.iterrows():
 #############################################################################################################################################################################################
 
 # Generate this month's OM ##################################################################################################################################################################
+logging.info("Generating this month's OM")
 for sku, sku_data in om_current.iterrows():
 	om_new.loc[sku, 'In Two Months Ago OM'] = config['DEFAULT_VALUES']['YES'] if sku in om_two_months.index else config['DEFAULT_VALUES']['NO']
 	om_new.loc[sku, 'Manually Added'] = config['DEFAULT_VALUES']['NO']
@@ -203,7 +241,7 @@ for sku, sku_data in om_current.iterrows():
 				om_new.loc[sku, 'Tax Category'] = config['CSP_TAX_CATEGORY']
 				om_new.loc[sku, 'GUID + Offer Name in last month OM'] = config['DEFAULT_VALUES']['NO']
 				om_new.loc[sku, 'GUID in last month OM'] = config['DEFAULT_VALUES']['NO']
-				om_new.loc[sku, 'Shortened Names'] = request_info('Shortened Names', sku_name=om_new.loc[sku, 'Offer Display Name'])
+				om_new.loc[sku, 'Shortened Names'] = request_info('Shortened Names', sku=sku, sku_name=om_new.loc[sku, 'Offer Display Name'])
 				om_new.loc[sku, 'Length'] = len(om_new.loc[sku, 'Shortened Names'])
 			elif om_new.loc[sku, 'Group'] == config['DEFAULT_VALUES']['MICROSOFT_ERROR']:
 				om_new.loc[sku, 'Parent Category'] = config['DEFAULT_VALUES']['MICROSOFT_ERROR']
@@ -317,35 +355,40 @@ for manual_sku, manual_sku_data in om_last[om_last['Manually Added'] == config['
 #############################################################################################################################################################################################
 
 # Generate this month's APS RM  #############################################################################################################################################################
+logging.info("Generating this month's APS RM")
 for children_sku, children_data in om_new.iterrows():
 	if pandas.notna(children_data['Depends On']):
 		parents = str(children_data['Depends On']).split(";")
 		for parent_sku in parents:
 			if parent_sku in om_new.index:
 				if om_new.loc[parent_sku, 'Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
-					if om_new.loc[parent_sku, 'Duration'] == children_data['Duration'] and om_new.loc[parent_sku, 'Group'] in config['SKU_GROUPS'] and children_data['License Type'] in config['ALLOWED_RELATIONS'][om_new.loc[parent_sku, 'License Type']]:
-						relations_current.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
-						relations_current.loc[parent_sku + children_sku, 'Two Months Ago'] = config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else config['DEFAULT_VALUES']['NO']
-						relations_current.loc[parent_sku + children_sku, 'ChildId'] = children_sku
-						relations_current.loc[parent_sku + children_sku, 'ChildName'] = om_new.loc[children_sku, 'Offer Display Name']
-						relations_current.loc[parent_sku + children_sku, 'ChildProvisioningId'] = om_new.loc[children_sku, 'Provisioning ID']
-						if (parent_sku + children_sku) in relations_last.index:
-							relations_current.loc[parent_sku + children_sku, 'Last Month'] = config['DEFAULT_VALUES']['YES']
-							relations_current.loc[parent_sku + children_sku, 'Reasons'] = relations_last.loc[parent_sku + children_sku, 'Reasons']
-						else:
-							relations_current.loc[parent_sku + children_sku, 'Last Month'] = config['DEFAULT_VALUES']['NO']
-						relations_current.loc[parent_sku + children_sku, 'Parent In OM'] = config['DEFAULT_VALUES']['YES']
-						relations_current.loc[parent_sku + children_sku, 'Parent Group'] = om_new.loc[parent_sku, 'Group']
-						relations_current.loc[parent_sku + children_sku, 'Parent License'] = om_new.loc[parent_sku, 'License Type']
-						relations_current.loc[parent_sku + children_sku, 'Parent/Child'] = om_new.loc[parent_sku, 'Parent/Child']
-						relations_current.loc[parent_sku + children_sku, 'Parent CMP Category'] = om_new.loc[parent_sku, 'CMP Category']
-						relations_current.loc[parent_sku + children_sku, 'Parent Sales Category'] = om_new.loc[parent_sku, 'Sales Category']
-						relations_current.loc[parent_sku + children_sku, 'ParentName'] = om_new.loc[parent_sku, 'Offer Display Name']
-						relations_current.loc[parent_sku + children_sku, 'ParentProvisioningId'] = om_new.loc[parent_sku, 'Provisioning ID']
-						relations_current.loc[parent_sku + children_sku, 'Child License'] = children_data['License Type']
-						if relations_current.loc[parent_sku + children_sku, 'Last Month'] == config['DEFAULT_VALUES']['NO']:
-							relations_current.loc[parent_sku + children_sku, 'Child Change'] = config['DEFAULT_VALUES']['YES'] if parent_sku in relations_last['ParentId'] else config['DEFAULT_VALUES']['NO']
-							relations_current.loc[parent_sku + children_sku, 'Parent Change'] = config['DEFAULT_VALUES']['YES'] if children_sku in relations_last['ChildId'] else config['DEFAULT_VALUES']['NO']
+					try:
+						if om_new.loc[parent_sku, 'Duration'] == children_data['Duration'] and om_new.loc[parent_sku, 'Group'] in config['SKU_GROUPS'] and children_data['License Type'] in config['ALLOWED_RELATIONS'][om_new.loc[parent_sku, 'License Type']]:
+							relations_current.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
+							relations_current.loc[parent_sku + children_sku, 'Two Months Ago'] = config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else config['DEFAULT_VALUES']['NO']
+							relations_current.loc[parent_sku + children_sku, 'ChildId'] = children_sku
+							relations_current.loc[parent_sku + children_sku, 'ChildName'] = om_new.loc[children_sku, 'Offer Display Name']
+							relations_current.loc[parent_sku + children_sku, 'ChildProvisioningId'] = om_new.loc[children_sku, 'Provisioning ID']
+							if (parent_sku + children_sku) in relations_last.index:
+								relations_current.loc[parent_sku + children_sku, 'Last Month'] = config['DEFAULT_VALUES']['YES']
+								relations_current.loc[parent_sku + children_sku, 'Reasons'] = relations_last.loc[parent_sku + children_sku, 'Reasons']
+							else:
+								relations_current.loc[parent_sku + children_sku, 'Last Month'] = config['DEFAULT_VALUES']['NO']
+							relations_current.loc[parent_sku + children_sku, 'Parent In OM'] = config['DEFAULT_VALUES']['YES']
+							relations_current.loc[parent_sku + children_sku, 'Parent Group'] = om_new.loc[parent_sku, 'Group']
+							relations_current.loc[parent_sku + children_sku, 'Parent License'] = om_new.loc[parent_sku, 'License Type']
+							relations_current.loc[parent_sku + children_sku, 'Parent/Child'] = om_new.loc[parent_sku, 'Parent/Child']
+							relations_current.loc[parent_sku + children_sku, 'Parent CMP Category'] = om_new.loc[parent_sku, 'CMP Category']
+							relations_current.loc[parent_sku + children_sku, 'Parent Sales Category'] = om_new.loc[parent_sku, 'Sales Category']
+							relations_current.loc[parent_sku + children_sku, 'ParentName'] = om_new.loc[parent_sku, 'Offer Display Name']
+							relations_current.loc[parent_sku + children_sku, 'ParentProvisioningId'] = om_new.loc[parent_sku, 'Provisioning ID']
+							relations_current.loc[parent_sku + children_sku, 'Child License'] = children_data['License Type']
+							if relations_current.loc[parent_sku + children_sku, 'Last Month'] == config['DEFAULT_VALUES']['NO']:
+								relations_current.loc[parent_sku + children_sku, 'Child Change'] = config['DEFAULT_VALUES']['YES'] if parent_sku in relations_last['ParentId'] else config['DEFAULT_VALUES']['NO']
+								relations_current.loc[parent_sku + children_sku, 'Parent Change'] = config['DEFAULT_VALUES']['YES'] if children_sku in relations_last['ChildId'] else config['DEFAULT_VALUES']['NO']
+					except:
+						logging.error("Error processing relations for parent_sku {0} and child_sku {1}".format(parent_sku, children_sku))
+
 			elif config['EXTENDED_RELATIONS_MATRIX']:
 				relations_current.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
 				relations_current.loc[parent_sku + children_sku, 'Two Months Ago'] = config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else config['DEFAULT_VALUES']['NO']
@@ -374,6 +417,7 @@ for children_sku, children_data in om_new.iterrows():
 #############################################################################################################################################################################################
 
 # Remove corporate addons if charity exists #################################################################################################################################################
+logging.info("Remove corporate addons if charity exists")
 if config['REMOVE_CORPORATE_ADDONS_WHEN_CHARITY_EXISTS']:
 	for relation_sku, relation_sku_data in relations_current[(relations_current['Parent License'] == 'Charity') & (relations_current['Child License'] == 'Corporate')].iterrows():
 		charity_skus = om_new[om_new['License Type'] == 'Charity']['Offer Display Name'].str.startswith(om_new.loc[relation_sku_data['ChildId'], 'Offer Display Name'])
@@ -383,28 +427,32 @@ if config['REMOVE_CORPORATE_ADDONS_WHEN_CHARITY_EXISTS']:
 #############################################################################################################################################################################################
 
 # Build Connect RM based on the one from MS #################################################################################################################################################
+logging.info("Build Connect RM based on the one from MS")
 for children_sku, children_data in om_new.iterrows():
 	if pandas.notna(children_data['Depends On']):
 		parents = str(children_data['Depends On']).split(";")
 		for parent_sku in parents:
 			if parent_sku in om_new.index:
 				if om_new.loc[parent_sku, 'Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
-					if om_new.loc[parent_sku, 'Duration'] == children_data['Duration'] and om_new.loc[parent_sku, 'Group'] in config['SKU_GROUPS'] and children_data['License Type'] in config['ALLOWED_RELATIONS'][om_new.loc[parent_sku, 'License Type']]:
-						if om_new.loc[parent_sku, 'Parent/Child'] == 'Parent':
-							relations_current_connect.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
-							relations_current_connect.loc[parent_sku + children_sku, 'Two Months Ago'] = config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else config['DEFAULT_VALUES']['NO']
-							relations_current_connect.loc[parent_sku + children_sku, 'ChildId'] = children_sku
-							relations_current_connect.loc[parent_sku + children_sku, 'ChildName'] = om_new.loc[children_sku, 'Offer Display Name']
-							relations_current_connect.loc[parent_sku + children_sku, 'Last Month'] = config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_last.index else config['DEFAULT_VALUES']['NO']
-							relations_current_connect.loc[parent_sku + children_sku, 'Parent License'] = om_new.loc[parent_sku, 'License Type']
-							relations_current_connect.loc[parent_sku + children_sku, 'ParentName'] = om_new.loc[parent_sku, 'Offer Display Name']
-							relations_current_connect.loc[parent_sku + children_sku, 'Child License'] = children_data['License Type']
-							if relations_current_connect.loc[parent_sku + children_sku, 'Last Month'] == config['DEFAULT_VALUES']['NO']:
-								relations_current_connect.loc[parent_sku + children_sku, 'Child Change'] = config['DEFAULT_VALUES']['YES'] if parent_sku in relations_last['ParentId'] else config['DEFAULT_VALUES']['NO']
-								relations_current_connect.loc[parent_sku + children_sku, 'Parent Change'] = config['DEFAULT_VALUES']['YES'] if children_sku in relations_last['ChildId'] else config['DEFAULT_VALUES']['NO']
-						else:
-							relations_current_addons2addons.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
-							relations_current_addons2addons.loc[parent_sku + children_sku, 'ChildId'] = children_sku
+					try:
+						if om_new.loc[parent_sku, 'Duration'] == children_data['Duration'] and om_new.loc[parent_sku, 'Group'] in config['SKU_GROUPS'] and children_data['License Type'] in config['ALLOWED_RELATIONS'][om_new.loc[parent_sku, 'License Type']]:
+							if om_new.loc[parent_sku, 'Parent/Child'] == 'Parent':
+								relations_current_connect.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
+								relations_current_connect.loc[parent_sku + children_sku, 'Two Months Ago'] = config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else config['DEFAULT_VALUES']['NO']
+								relations_current_connect.loc[parent_sku + children_sku, 'ChildId'] = children_sku
+								relations_current_connect.loc[parent_sku + children_sku, 'ChildName'] = om_new.loc[children_sku, 'Offer Display Name']
+								relations_current_connect.loc[parent_sku + children_sku, 'Last Month'] = config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_last.index else config['DEFAULT_VALUES']['NO']
+								relations_current_connect.loc[parent_sku + children_sku, 'Parent License'] = om_new.loc[parent_sku, 'License Type']
+								relations_current_connect.loc[parent_sku + children_sku, 'ParentName'] = om_new.loc[parent_sku, 'Offer Display Name']
+								relations_current_connect.loc[parent_sku + children_sku, 'Child License'] = children_data['License Type']
+								if relations_current_connect.loc[parent_sku + children_sku, 'Last Month'] == config['DEFAULT_VALUES']['NO']:
+									relations_current_connect.loc[parent_sku + children_sku, 'Child Change'] = config['DEFAULT_VALUES']['YES'] if parent_sku in relations_last['ParentId'] else config['DEFAULT_VALUES']['NO']
+									relations_current_connect.loc[parent_sku + children_sku, 'Parent Change'] = config['DEFAULT_VALUES']['YES'] if children_sku in relations_last['ChildId'] else config['DEFAULT_VALUES']['NO']
+							else:
+								relations_current_addons2addons.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
+								relations_current_addons2addons.loc[parent_sku + children_sku, 'ChildId'] = children_sku
+					except:
+						logging.error("Error processing relations for parent_sku {0} and child_sku {1}".format(parent_sku, children_sku))
 
 for addon2addon_sku, addon2addon_data in relations_current_addons2addons.iterrows():
 	for relation_sku, relation_sku_data in relations_current_connect[relations_current_connect['ChildId'] == addon2addon_data['ParentId']].iterrows():
@@ -424,6 +472,7 @@ for relation_sku, relation_sku_data in relations_last.iterrows():
 #############################################################################################################################################################################################
 
 # Build UM ##################################################################################################################################################################################
+logging.info("Build UM")
 for sku, sku_data in om_new[om_new['Parent/Child'] == 'Parent'].sort_values(by='Offer Display Name').iterrows():
 	destinations = str(sku_data['Can Convert To']).split(";")
 	for destination in destinations:
@@ -435,6 +484,7 @@ for sku, sku_data in om_new[om_new['Parent/Child'] == 'Parent'].sort_values(by='
 #############################################################################################################################################################################################
 
 # Generate this month's Country Matrix ######################################################################################################################################################
+logging.info("Generating this month's country matrix")
 for sku, sku_data in om_new.iterrows():
 	countries = str(om_new.loc[sku, 'Allowed Countries']).split(";")
 	for country in countries:
@@ -501,6 +551,7 @@ for sku, sku_data in om_new.iterrows():
 #############################################################################################################################################################################################
 
 # Create Structure DataFrame and save everything into destination ###########################################################################################################################
+logging.info("Saving files")
 with pandas.ExcelWriter(config['OM_OUTPUT']) as writer:
 	om_new.to_excel(writer, sheet_name='OM', index_label='OfferId')
 	om_last.to_excel(writer, sheet_name='OM Last', index_label='OfferId')
