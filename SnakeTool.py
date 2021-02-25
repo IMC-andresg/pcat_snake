@@ -9,6 +9,10 @@ import requests
 import tabulate
 from tinydb import Query, TinyDB
 
+from datetime import date
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 # Load local db and logging 
 db = TinyDB('db.json')
 logging.basicConfig(filename="snake_{0}.log".format(time.strftime("%Y%m%d-%H%M%S")), level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -77,6 +81,37 @@ def request_info(name, choices=None, sku=None, sku_name=None, sku_pl_two_months_
 		return short_name
 #############################################################################################################################################################################################
 
+# Determine running month & files
+
+default_month = date.today().strftime("%Y%m")
+entered_text = input(f"Enter month to process [Default: {default_month}]: ").strip()
+try:
+	if entered_text == "":
+		selected_month_year_str = default_month
+		selected_month_year = date.today()
+	else:
+		selected_month_year_str = entered_text
+		selected_month_year = datetime.strptime(entered_text, '%Y%m')
+except ValueError:
+    raise ValueError("Incorrect data format, should be YYYYMM")
+
+one_month_ago_str = (selected_month_year + relativedelta(months=-1)).strftime("%Y%m")
+two_months_ago_str = (selected_month_year + relativedelta(months=-2)).strftime("%Y%m")
+next_month_year_str = (selected_month_year + relativedelta(months=+1)).strftime("%Y%m")
+
+
+OM_THIS_MONTH_PATH = config['OM_PATH_TMPL'].replace('<MONTH_YEAR>', selected_month_year_str)
+OM_LAST_MONTH_PATH = config['OUT_PATH_TMPL'].replace('<MONTH_YEAR>', one_month_ago_str)
+OM_TWO_MONTHS_PATH = config['OUT_PATH_TMPL'].replace('<MONTH_YEAR>', two_months_ago_str)
+PL_THIS_MONTH_PATH = config['PL_PATH_TMPL'].replace('<MONTH_YEAR>', selected_month_year_str)
+PL_NEXT_MONTH_PREVIEW_PATH = config['PL_PREV_PATH_TMPL'].replace('<PREV_MONTH_YEAR>', next_month_year_str).replace('<MONTH_YEAR>', selected_month_year_str)
+PL_LAST_MONTH_PATH = config['PL_PATH_TMPL'].replace('<MONTH_YEAR>', one_month_ago_str)
+PL_TWO_MONTHS_PATH = config['PL_PATH_TMPL'].replace('<MONTH_YEAR>', two_months_ago_str)
+OM_OUTPUT_PATH = config['OUT_PATH_TMPL'].replace('<MONTH_YEAR>', selected_month_year_str)
+SW_THIS_MONTH_PATH = config['SW_PATH_TMPL'].replace('<MONTH_YEAR>', selected_month_year_str)
+SW_LAST_MONTH_PATH = config['SW_OUT_PATH_TMPL'].replace('<MONTH_YEAR>', one_month_ago_str)
+SW_TWO_MONTHS_PATH = config['SW_OUT_PATH_TMPL'].replace('<MONTH_YEAR>', two_months_ago_str)
+SW_OUTPUT_PATH = config['SW_OUT_PATH_TMPL'].replace('<MONTH_YEAR>', selected_month_year_str)
 
 # Load Connect items ########################################################################################################################################################################
 logging.info("Loading Connect items")
@@ -111,32 +146,32 @@ for product in config['CONNECT_PRODUCTS']:
 #############################################################################################################################################################################################
 
 # Start DataFrames ##########################################################################################################################################################################
-om_current = pandas.read_excel(config['OM_THIS_MONTH'], sheet_name='Office_Dynamics_Windows_Intune', index_col=1)
-om_last = pandas.read_excel(config['OM_LAST_MONTH'], sheet_name='OM', index_col=0)
-om_two_months = pandas.read_excel(config['OM_TWO_MONTHS'], sheet_name='OM', index_col=0)
+om_current = pandas.read_excel(OM_THIS_MONTH_PATH, sheet_name='Office_Dynamics_Windows_Intune', index_col=1)
+om_last = pandas.read_excel(OM_LAST_MONTH_PATH, sheet_name='OM', index_col=0)
+om_two_months = pandas.read_excel(OM_TWO_MONTHS_PATH, sheet_name='OM', index_col=0)
 om_new = pandas.DataFrame(columns=config['OM_HEADERS'])
-ghost_file = Path(config['OM_OUTPUT'])
+ghost_file = Path(OM_OUTPUT_PATH)
 if ghost_file.is_file():
-	om_ghost = pandas.read_excel(config['OM_OUTPUT'], sheet_name='OM', index_col=0)
+	om_ghost = pandas.read_excel(OM_OUTPUT_PATH, sheet_name='OM', index_col=0)
 else:
 	om_ghost = pandas.DataFrame()
 
-pl_current = pandas.read_excel(config['PL_THIS_MONTH'], sheet_name='USD', index_col=4)
-pl_next_month_preview = pandas.read_excel(config['PL_NEXT_MONTH_PREVIEW'], sheet_name='USD', index_col=4)
-pl_last = pandas.read_excel(config['PL_LAST_MONTH'], sheet_name='USD', index_col=4)
-pl_two_months = pandas.read_excel(config['PL_TWO_MONTHS'], sheet_name='USD', index_col=4)
+pl_current = pandas.read_excel(PL_THIS_MONTH_PATH, sheet_name='USD', index_col=4)
+pl_next_month_preview = pandas.read_excel(PL_NEXT_MONTH_PREVIEW_PATH, sheet_name='USD', index_col=4)
+pl_last = pandas.read_excel(PL_LAST_MONTH_PATH, sheet_name='USD', index_col=4)
+pl_two_months = pandas.read_excel(PL_TWO_MONTHS_PATH, sheet_name='USD', index_col=4)
 
-relations_last = pandas.read_excel(config['OM_LAST_MONTH'], sheet_name='RM', index_col=0)
-relations_two_months = pandas.read_excel(config['OM_TWO_MONTHS'], sheet_name='RM', index_col=0)
+relations_last = pandas.read_excel(OM_LAST_MONTH_PATH, sheet_name='RM', index_col=0)
+relations_two_months = pandas.read_excel(OM_TWO_MONTHS_PATH, sheet_name='RM', index_col=0)
 relations_current = pandas.DataFrame(columns=config['APS_RELATIONS_HEADERS'])
 relations_current_connect = pandas.DataFrame(columns=config['CONNECT_RELATIONS_HEADERS'])
-relations_last_connect = pandas.read_excel(config['OM_LAST_MONTH'], sheet_name='RM Connect', index_col=0)
-relations_two_months_connect = pandas.read_excel(config['OM_TWO_MONTHS'], sheet_name='RM Connect', index_col=0)
+relations_last_connect = pandas.read_excel(OM_LAST_MONTH_PATH, sheet_name='RM Connect', index_col=0)
+relations_two_months_connect = pandas.read_excel(OM_TWO_MONTHS_PATH, sheet_name='RM Connect', index_col=0)
 relations_current_addons2addons = pandas.DataFrame()
 
 upgrades_current = pandas.DataFrame(columns=config['UPGRADES_HEADERS'])
 
-countries_last = pandas.read_excel(config['OM_LAST_MONTH'], sheet_name='CM', index_col=0)
+countries_last = pandas.read_excel(OM_LAST_MONTH_PATH, sheet_name='CM', index_col=0)
 countries_current = pandas.DataFrame(columns=config['COUNTRIES_HEADERS'])
 country_availability = pandas.DataFrame(columns=config['COUNTRY_AVAIABILITY_HEADERS'] + config['T27'] + config['SERVICE_PROVIDER_COUNTRIES'])
 
@@ -552,7 +587,7 @@ for sku, sku_data in om_new.iterrows():
 
 # Create Structure DataFrame and save everything into destination ###########################################################################################################################
 logging.info("Saving files")
-with pandas.ExcelWriter(config['OM_OUTPUT']) as writer:
+with pandas.ExcelWriter(OM_OUTPUT_PATH) as writer:
 	om_new.to_excel(writer, sheet_name='OM', index_label='OfferId')
 	om_last.to_excel(writer, sheet_name='OM Last', index_label='OfferId')
 	relations_current.to_excel(writer, sheet_name='RM', index_label='RelationId')
@@ -581,9 +616,33 @@ with pandas.ExcelWriter(config['OM_OUTPUT']) as writer:
 						if relation_sku_data['ChildId'] in list(dict.fromkeys(relations_current['ParentId'])):
 							for addon_to_addon_sku, addon_to_addon_data in relations_current[relations_current['ParentId'] == relation_sku_data['ChildId']].sort_values(by=['ChildName', 'ChildId']).iterrows():
 								if addon_to_addon_data['ChildId'] not in addons_sku_list and config['REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS']:
-									structure_current = structure_current.append({'OfferID': addon_to_addon_data['ChildId'], 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': addon_to_addon_data['ChildName'], 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'], 'Name Change': om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
+									addon_to_addon_offer_name = addon_to_addon_data['ChildName'] + " for " + sku_data['Shortened Names']
+									structure_current = structure_current.append({'OfferID': addon_to_addon_data['ChildId'], 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': addon_to_addon_offer_name, 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'], 'Name Change': om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
 
 		structure_current.to_excel(writer, sheet_name=config['SKU_GROUPS'][group]['shortname'] + ' APS')
+	
+	# New consolidated APS tab
+	structure_current = pandas.DataFrame(columns=config['APS_STRUCTURE_HEADERS_2'])
+	overall_index = 1
+	for group in config['SKU_GROUPS']:
+		om_new_filtered = om_new[om_new['Group'] == group].sort_values(by='Offer Display Name')
+		common_columns = {'License Type': config['SKU_GROUPS'][group]['License Type'], 'Ingram Group': config['SKU_GROUPS'][group]['Ingram Group']}
+		for sku, sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():
+			if sku_data['Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
+				structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': sku, 'Parent SKU + RelationID': sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': sku_data['Offer Display Name'], 'CMP Category': sku_data['CMP Category'], 'SKU In Last Month OM': sku_data['In Last Month OM'], 'Name Change': sku_data['Name Change']}, ignore_index=True)
+				overall_index += 1
+				if sku in list(dict.fromkeys(relations_current['ParentId'])):
+					addons_sku_list = list(dict.fromkeys(relations_current[relations_current['ParentId'] == sku]['ChildId']))
+					for relation_sku, relation_sku_data in relations_current[relations_current['ParentId'] == sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
+						structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': sku + relation_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'CMP Category': om_new.loc[relation_sku_data['ChildId'], 'CMP Category'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': relation_sku_data['Last Month'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
+						overall_index += 1
+						if relation_sku_data['ChildId'] in list(dict.fromkeys(relations_current['ParentId'])):
+							for addon_to_addon_sku, addon_to_addon_data in relations_current[relations_current['ParentId'] == relation_sku_data['ChildId']].sort_values(by=['ChildName', 'ChildId']).iterrows():
+								if addon_to_addon_data['ChildId'] not in addons_sku_list and config['REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS']:
+									addon_to_addon_offer_name = addon_to_addon_data['ChildName'] + " for " + sku_data['Shortened Names']
+									structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': addon_to_addon_data['ChildId'], 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': addon_to_addon_offer_name, 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'], 'Name Change': om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
+									overall_index += 1
+	structure_current.to_excel(writer, sheet_name='APS Skus')
 
 	for group in config['SKU_GROUPS']:
 		structure_current = pandas.DataFrame(columns=config['CONNECT_STRUCTURE_HEADERS'])
@@ -598,14 +657,35 @@ with pandas.ExcelWriter(config['OM_OUTPUT']) as writer:
 							structure_current = structure_current.append({'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': 'ADD-ON', 'Connect Product Id': connect_items.loc[relation_sku_based_on_license_type, 'Connect product'], 'Connect annual item Id': connect_items.loc[relation_sku_based_on_license_type, 'Annual item'], 'Connect annual item name': connect_items.loc[relation_sku_based_on_license_type, 'Annual name'], 'Connect monthly item Id': connect_items.loc[relation_sku_based_on_license_type, 'Monthly item'], 'Connect monthly item name': connect_items.loc[relation_sku_based_on_license_type, 'Monthly name'], 'Offer Display Name': relation_sku_data['ChildName'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
 						else:
 							structure_current = structure_current.append({'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'Connect product category': 'ADD-ON', 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
-
 		structure_current.to_excel(writer, sheet_name=config['SKU_GROUPS'][group]['shortname'] + ' Connect')
+
+	# New Consolidated Connect Tab
+	structure_current = pandas.DataFrame(columns=config['CONNECT_STRUCTURE_HEADERS_2'])
+	overall_index = 1
+	for group in config['SKU_GROUPS']:
+		om_new_filtered = om_new[om_new['Group'] == group].sort_values(by='Offer Display Name')
+		common_columns = {'License Type': config['SKU_GROUPS'][group]['License Type'], 'Ingram Group': config['SKU_GROUPS'][group]['Ingram Group']}
+		for parent_sku, parent_sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():
+			if parent_sku_data['Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
+				structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': parent_sku, 'RelationID': parent_sku, 'Parent SKU + RelationID': parent_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': parent_sku_data['Connect product category'], 'Connect Product Id': parent_sku_data['Connect Product Id'], 'Connect annual item Id': parent_sku_data['Connect annual item Id'], 'Connect annual item name': parent_sku_data['Connect annual item name'], 'Connect monthly item Id': parent_sku_data['Connect monthly item Id'], 'Connect monthly item name': parent_sku_data['Connect monthly item name'], 'Offer Display Name': parent_sku_data['Offer Display Name'], 'SKU In Last Month OM': parent_sku_data['In Last Month OM'], 'Name Change': parent_sku_data['Name Change']}, ignore_index=True)
+				overall_index += 1
+				if parent_sku in list(dict.fromkeys(relations_current_connect['ParentId'])):
+					for relation_sku, relation_sku_data in relations_current_connect[relations_current_connect['ParentId'] == parent_sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
+						relation_sku_based_on_license_type = relation_sku_data['ChildId'] + '_' + parent_sku_data['License Type']
+						if relation_sku_based_on_license_type in connect_items.index:
+							structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': 'ADD-ON', 'Connect Product Id': connect_items.loc[relation_sku_based_on_license_type, 'Connect product'], 'Connect annual item Id': connect_items.loc[relation_sku_based_on_license_type, 'Annual item'], 'Connect annual item name': connect_items.loc[relation_sku_based_on_license_type, 'Annual name'], 'Connect monthly item Id': connect_items.loc[relation_sku_based_on_license_type, 'Monthly item'], 'Connect monthly item name': connect_items.loc[relation_sku_based_on_license_type, 'Monthly name'], 'Offer Display Name': relation_sku_data['ChildName'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
+							overall_index += 1
+						else:
+							structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'Connect product category': 'ADD-ON', 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
+							overall_index += 1
+
+	structure_current.to_excel(writer, sheet_name='Connect Skus')
 #############################################################################################################################################################################################
 
 # Load Software Subscriptions DataFrames ####################################################################################################################################################
-sw_current = pandas.read_excel(config['SW_THIS_MONTH'])
-sw_last = pandas.read_excel(config['SW_LAST_MONTH'], sheet_name='SW', index_col=0)
-sw_two_months = pandas.read_excel(config['SW_TWO_MONTHS'], sheet_name='SW', index_col=0)
+sw_current = pandas.read_excel(SW_THIS_MONTH_PATH)
+sw_last = pandas.read_excel(SW_LAST_MONTH_PATH, sheet_name='SW', index_col=0)
+sw_two_months = pandas.read_excel(SW_TWO_MONTHS_PATH, sheet_name='SW', index_col=0)
 sw_new = pandas.DataFrame(columns=config['SW_HEADERS'])
 #############################################################################################################################################################################################
 
@@ -650,7 +730,7 @@ for sw_last_sku, sw_last_sku_data in sw_last.iterrows():
 #############################################################################################################################################################################################
 
 # Create Structure DataFrame and save everything into destination ###########################################################################################################################
-with pandas.ExcelWriter(config['SW_OUTPUT']) as writer:
+with pandas.ExcelWriter(SW_OUTPUT_PATH) as writer:
 	sw_new.sort_values(by='Offer Display Name').to_excel(writer, sheet_name='SW', index_label='OfferID')
 	sw_last.sort_values(by='Offer Display Name').to_excel(writer, sheet_name='SW LAST', index_label='OfferID')
 	connect_items.to_excel(writer, sheet_name='Connect items', index_label='Sku')

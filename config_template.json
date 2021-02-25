@@ -51,115 +51,153 @@
 			"CMP Category": "Dynamics Flat Catalogue Charity",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Charity)",
-			"shortname": "D365 Charity"
+			"shortname": "D365 Charity",
+			"License Type": "Charity",
+			"Ingram Group": "Dynamics 365"
 		},
 		"Dynamics 365 Corporate": {
 			"CMP Category": "Dynamics Flat Catalogue Corporate",
 			"Parent Category": "Business Applications",
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Corporate)",
-			"shortname": "D365 Corporate"
+			"shortname": "D365 Corporate",
+			"License Type": "Corporate",
+			"Ingram Group": "Dynamics 365"
 		},
 		"Dynamics 365 Education": {
 			"CMP Category": "Dynamics Flat Catalogue Education",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Education)",
-			"shortname": "D365 Education"
+			"shortname": "D365 Education",
+			"License Type": "Education",
+			"Ingram Group": "Dynamics 365"
 		},
 		"Dynamics 365 GCC": {
 			"CMP Category": "Dynamics Flat Catalogue Government",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Government)",
-			"shortname": "D365 GCC"
+			"shortname": "D365 GCC",
+			"License Type": "Government",
+			"Ingram Group": "Dynamics 365"
 		},
 		"EM+S Charity": {
 			"CMP Category": "Enterprise Mobility Suite",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Enterprise Mobility Suite (Charity)",
-			"shortname": "EM+S Charity"
+			"shortname": "EM+S Charity",
+			"License Type": "Charity",
+			"Ingram Group": "EM+S"
 		},
 		"EM+S Corporate": {
 			"CMP Category": "Enterprise Mobility Suite",
 			"Parent Category": "Security",
 			"Sales Category": "Microsoft - Enterprise Mobility Suite (Corporate)",
-			"shortname": "EM+S Corporate"
+			"shortname": "EM+S Corporate",
+			"License Type": "Corporate",
+			"Ingram Group": "EM+S"
 		},
 		"EM+S Education": {
 			"CMP Category": "Enterprise Mobility Suite",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Enterprise Mobility Suite (Education)",
-			"shortname": "EM+S Education"
+			"shortname": "EM+S Education",
+			"License Type": "Education",
+			"Ingram Group": "EM+S"
 		},
 		"EM+S GCC": {
 			"CMP Category": "Enterprise Mobility Suite",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Enterprise Mobility Suite (Government)",
-			"shortname": "EM+S GCC"
+			"shortname": "EM+S GCC",
+			"License Type": "Government",
+			"Ingram Group": "EM+S"
 		},
 		"Microsoft 365 Charity": {
 			"CMP Category": "Microsoft 365 Charity",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft 365 (Charity)",
-			"shortname": "M365 Charity"
+			"shortname": "M365 Charity",
+			"License Type": "Charity",
+			"Ingram Group": "Microsoft 365"
 		},
 		"Microsoft 365 Corporate": {
 			"CMP Category": "Microsoft 365 Business",
 			"Parent Category": "Business Applications",
 			"Sales Category": "Microsoft 365 (Corporate)",
-			"shortname": "M365 Corporate"
+			"shortname": "M365 Corporate",
+			"License Type": "Corporate",
+			"Ingram Group": "Microsoft 365"
 		},
 		"Microsoft 365 Education": {
 			"CMP Category": "Microsoft 365 Education",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft 365 (Education)",
-			"shortname": "M365 Education"
+			"shortname": "M365 Education",
+			"License Type": "Education",
+			"Ingram Group": "Microsoft 365"
 		},
 		"Microsoft 365 GCC": {
 			"CMP Category": "Microsoft 365 Enterprise",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft 365 (Government)",
-			"shortname": "M365 GCC"
+			"shortname": "M365 GCC",
+			"License Type": "Government",
+			"Ingram Group": "Microsoft 365"
 		},
 		"Office 365 Charity": {
 			"CMP Category": "Communication and Collaboration Tools",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Communication and Collaboration Tools (Charity)",
-			"shortname": "O365 Charity"
+			"shortname": "O365 Charity",
+			"License Type": "Charity",
+			"Ingram Group": "O365"
 		},
 		"Office 365 Corporate": {
 			"CMP Category": "Communication and Collaboration Tools",
 			"Parent Category": "Communication and Collaboration",
 			"Sales Category": "Microsoft - Communication and Collaboration Tools (Corporate)",
-			"shortname": "O365 Corporate"
+			"shortname": "O365 Corporate",
+			"License Type": "Corporate",
+			"Ingram Group": "O365"
 		},
 		"Office 365 Education": {
 			"CMP Category": "Communication and Collaboration Tools",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Communication and Collaboration Tools (Education)",
-			"shortname": "O365 Education"
+			"shortname": "O365 Education",
+			"License Type": "Education",
+			"Ingram Group": "O365"
 		},
 		"Office 365 GCC": {
 			"CMP Category": "Communication and Collaboration Tools",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Communication and Collaboration Tools (Government)",
-			"shortname": "O365 GCC"
+			"shortname": "O365 GCC",
+			"License Type": "Government",
+			"Ingram Group": "O365"
 		},
 		"Windows 10 Charity": {
 			"CMP Category": "Windows 10 Charity",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Windows 10 Enterprise (Charity)",
-			"shortname": "W10 Charity"
+			"shortname": "W10 Charity",
+			"License Type": "Charity",
+			"Ingram Group": "Windows"
 		},
 		"Windows 10 Corporate": {
 			"CMP Category": "Windows 10 Enterprise",
 			"Parent Category": "Business Applications",
 			"Sales Category": "Microsoft - Windows 10 Enterprise (Corporate)",
-			"shortname": "W10 Corporate"
+			"shortname": "W10 Corporate",
+			"License Type": "Corporate",
+			"Ingram Group": "Windows"
 		},
 		"Windows 10 Education": {
 			"CMP Category": "Windows 10 Education",
 			"Parent Category": "Industry Solutions",
 			"Sales Category": "Microsoft - Windows 10 Enterprise (Education)",
-			"shortname": "W10 Education"
+			"shortname": "W10 Education",
+			"License Type": "Education",
+			"Ingram Group": "Windows"
 		},
 		"Trials": {"shortname": "Trials"}
 	},
@@ -182,6 +220,9 @@
 
 	"APS_STRUCTURE_HEADERS": ["OfferID", "RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "Parent Name Short", "Offer Display Name", "CMP Category",
 		"SKU In Last Month OM", "Relation In Last Month", "Name Change"],
+	
+	"APS_STRUCTURE_HEADERS_2": ["License Type", "Ingram Group", "OfferID", "RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "Parent Name Short", "Offer Display Name", "CMP Category",
+		"SKU In Last Month OM", "Relation In Last Month", "Name Change"],
 
 	"SW_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "Offer Display Name", "Group", "Parent/Child", "CMP Category", "Parent Category",
 		"Sales Category", "Tax Category", "Duration", "Billing Frequency", "Min Seat Count", "Max Seat Count", "Allowed Countries", "Shortened Names",
@@ -190,6 +231,9 @@
 	"CONNECT_RELATIONS_HEADERS": ["Two Months Ago", "Last Month", "ParentId", "ParentName", "Parent License", "ChildId", "ChildName", "Child License", "Parent Change", "Child Change"],
 
 	"CONNECT_STRUCTURE_HEADERS": ["OfferID", "RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "Parent Name Short", "Offer Display Name", "Connect product category", "Connect Product Id",
+		"Connect annual item Id", "Connect annual item name", "Connect monthly item Id", "Connect monthly item name", "SKU In Last Month OM", "Relation In Last Month", "Name Change"],
+
+	"CONNECT_STRUCTURE_HEADERS_2": ["License Type", "Ingram Group", "OfferID", "RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "Parent Name Short", "Offer Display Name", "Connect product category", "Connect Product Id",
 		"Connect annual item Id", "Connect annual item name", "Connect monthly item Id", "Connect monthly item name", "SKU In Last Month OM", "Relation In Last Month", "Name Change"],
 
 	"OM_ADD_THIS_MONTH_HEADERS": ["OfferID", "Offer Display Name", "Group"],
