@@ -1,20 +1,10 @@
 {
-	"OM_THIS_MONTH": "./files/202012/All_202012_legacy_license_offermatrix_sheets.xlsx",
-	"OM_LAST_MONTH": "./files/202011/OM 202011 reworked by MicrOMTool in November.xlsx",
-	"OM_TWO_MONTHS": "./files/202010/OM 202010 reworked by MicrOMTool in October.xlsx",
-
-	"PL_THIS_MONTH": "./files/202012/December-2020-Cloud-Reseller-Pricelist.xlsx",
-	"PL_NEXT_MONTH_PREVIEW": "./files/202012/January-2021-Cloud-Reseller-Pricelist.xlsx",
-	"PL_LAST_MONTH": "./files/202011/November-2020-Cloud-Reseller-Pricelist.xlsx",
-	"PL_TWO_MONTHS": "./files/202010/October-2020-Cloud-Reseller-Pricelist.xlsx",
-
-	"OM_OUTPUT": "./files/202012/OM 202012 reworked by MicrOMTool in December.xlsx",
-
-	"SW_THIS_MONTH": "./files/202012/Software-Subscriptions-CSP-Commercial-Price-List-December-2020.xlsx",
-	"SW_LAST_MONTH": "./files/202011/SW 202011 reworked by MicrOMTool in November.xlsx",
-	"SW_TWO_MONTHS": "./files/202010/SW 202010 reworked by MicrOMTool in October.xlsx",
-
-	"SW_OUTPUT": "./files/202012/SW 202012 reworked by MicrOMTool in December.xlsx",
+	"OM_PATH_TMPL": "./files/<MONTH_YEAR>/All_<MONTH_YEAR>_legacy_license_offermatrix_sheets.xlsx",
+	"SW_PATH_TMPL": "./files/<MONTH_YEAR>/Software-Subscriptions-CSP-Commercial-Price-List-<MONTH_YEAR>.xlsx",
+	"PL_PATH_TMPL": "./files/<MONTH_YEAR>/<MONTH_YEAR>-Cloud-Reseller-Pricelist.xlsx",
+	"PL_PREV_PATH_TMPL": "./files/<MONTH_YEAR>/<PREV_MONTH_YEAR>-Cloud-Reseller-Pricelist.xlsx",
+	"OUT_PATH_TMPL": "./files/<MONTH_YEAR>/OM <MONTH_YEAR> reworked by MicrOMTool.xlsx",
+	"SW_OUT_PATH_TMPL": "./files/<MONTH_YEAR>/SW <MONTH_YEAR> reworked by MicrOMTool.xlsx",
 
 	"EXTENDED_RELATIONS_MATRIX": false,
 	"EXTENDED_COUNTRY_MATRIX": false,
@@ -53,7 +43,7 @@
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Charity)",
 			"shortname": "D365 Charity",
 			"License Type": "Charity",
-			"Ingram Group": "Dynamics 365"
+			"Ingram Group": "D365"
 		},
 		"Dynamics 365 Corporate": {
 			"CMP Category": "Dynamics Flat Catalogue Corporate",
@@ -61,7 +51,7 @@
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Corporate)",
 			"shortname": "D365 Corporate",
 			"License Type": "Corporate",
-			"Ingram Group": "Dynamics 365"
+			"Ingram Group": "D365"
 		},
 		"Dynamics 365 Education": {
 			"CMP Category": "Dynamics Flat Catalogue Education",
@@ -69,7 +59,7 @@
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Education)",
 			"shortname": "D365 Education",
 			"License Type": "Education",
-			"Ingram Group": "Dynamics 365"
+			"Ingram Group": "D365"
 		},
 		"Dynamics 365 GCC": {
 			"CMP Category": "Dynamics Flat Catalogue Government",
@@ -77,7 +67,7 @@
 			"Sales Category": "Microsoft - Dynamics 365 Flat Catalogue (Government)",
 			"shortname": "D365 GCC",
 			"License Type": "Government",
-			"Ingram Group": "Dynamics 365"
+			"Ingram Group": "D365"
 		},
 		"EM+S Charity": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -117,7 +107,7 @@
 			"Sales Category": "Microsoft 365 (Charity)",
 			"shortname": "M365 Charity",
 			"License Type": "Charity",
-			"Ingram Group": "Microsoft 365"
+			"Ingram Group": "M365"
 		},
 		"Microsoft 365 Corporate": {
 			"CMP Category": "Microsoft 365 Business",
@@ -125,7 +115,7 @@
 			"Sales Category": "Microsoft 365 (Corporate)",
 			"shortname": "M365 Corporate",
 			"License Type": "Corporate",
-			"Ingram Group": "Microsoft 365"
+			"Ingram Group": "M365"
 		},
 		"Microsoft 365 Education": {
 			"CMP Category": "Microsoft 365 Education",
@@ -133,7 +123,7 @@
 			"Sales Category": "Microsoft 365 (Education)",
 			"shortname": "M365 Education",
 			"License Type": "Education",
-			"Ingram Group": "Microsoft 365"
+			"Ingram Group": "M365"
 		},
 		"Microsoft 365 GCC": {
 			"CMP Category": "Microsoft 365 Enterprise",
@@ -141,7 +131,7 @@
 			"Sales Category": "Microsoft 365 (Government)",
 			"shortname": "M365 GCC",
 			"License Type": "Government",
-			"Ingram Group": "Microsoft 365"
+			"Ingram Group": "M365"
 		},
 		"Office 365 Charity": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -199,7 +189,11 @@
 			"License Type": "Education",
 			"Ingram Group": "Windows"
 		},
-		"Trials": {"shortname": "Trials"}
+		"Trials": {
+			"shortname": "Trials",
+			"License Type": "Trials",
+			"Ingram Group": "Trials"
+		}
 	},
 
 	"OM_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "In Next Month OM", "Manually Added", "Offer Display Name", "Provisioning ID", "Group", "Parent/Child", "CMP Category", "Parent Category",
@@ -269,9 +263,6 @@
 		"PRD-812-360-509": {"License type": "Corporate"},
 		"PRD-612-640-519": {"License type": "Academic"},
 		"PRD-721-371-117": {"License type": "Charity"},
-		"PRD-245-602-328": {"License type": "Corporate"},
-		"PRD-546-033-870": {"License type": "Academic"},
-		"PRD-757-861-019": {"License type": "Charity"},
 		"PRD-812-485-361": {"License type": "Corporate"},
 		"PRD-376-475-231": {"License type": "Corporate"}
 	},
