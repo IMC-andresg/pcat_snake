@@ -79,6 +79,11 @@ def request_info(name, choices=None, sku=None, sku_name=None, sku_pl_two_months_
 			short_name = sku_name if entered_text == "" else entered_text
 		save_sku_shortname(sku, sku_name, short_name)
 		return short_name
+
+def read_pl_file(file_path):
+	sheet_map = pandas.read_excel(file_path, sheet_name=None)
+	mdf = pandas.concat(sheet_map, axis=0, ignore_index=True)
+	return mdf.drop_duplicates(subset=['Offer ID'],ignore_index=True).set_index('Offer ID')
 #############################################################################################################################################################################################
 
 # Determine running month & files
@@ -156,10 +161,10 @@ if ghost_file.is_file():
 else:
 	om_ghost = pandas.DataFrame()
 
-pl_current = pandas.read_excel(PL_THIS_MONTH_PATH, sheet_name='USD', index_col=4)
-pl_next_month_preview = pandas.read_excel(PL_NEXT_MONTH_PREVIEW_PATH, sheet_name='USD', index_col=4)
-pl_last = pandas.read_excel(PL_LAST_MONTH_PATH, sheet_name='USD', index_col=4)
-pl_two_months = pandas.read_excel(PL_TWO_MONTHS_PATH, sheet_name='USD', index_col=4)
+pl_current = read_pl_file(PL_THIS_MONTH_PATH)
+pl_next_month_preview = read_pl_file(PL_NEXT_MONTH_PREVIEW_PATH)
+pl_last = read_pl_file(PL_LAST_MONTH_PATH)
+pl_two_months = read_pl_file(PL_TWO_MONTHS_PATH)
 
 relations_last = pandas.read_excel(OM_LAST_MONTH_PATH, sheet_name='RM', index_col=0)
 relations_two_months = pandas.read_excel(OM_TWO_MONTHS_PATH, sheet_name='RM', index_col=0)
