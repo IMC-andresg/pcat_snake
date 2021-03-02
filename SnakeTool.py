@@ -5,6 +5,8 @@ import time
 from pathlib import Path
 
 import pandas
+from pandas.api.types import CategoricalDtype
+import numpy as np
 import requests
 import tabulate
 from tinydb import Query, TinyDB
@@ -153,9 +155,11 @@ else:
 			offset = offset + config['CONNECT_PARAMS']['LIMIT']
 			params = {'limit': config['CONNECT_PARAMS']['LIMIT'], 'offset': offset}
 			response = requests.get(url, headers=headers, params=params).json()
+	connect_items.to_pickle(cached_connect_items)
 #############################################################################################################################################################################################
 
 # Start DataFrames ##########################################################################################################################################################################
+logging.info("Load OM & PL files")
 om_current = pandas.read_excel(OM_THIS_MONTH_PATH, sheet_name='Office_Dynamics_Windows_Intune', index_col=1)
 om_last = pandas.read_excel(OM_LAST_MONTH_PATH, sheet_name='OM', index_col=0)
 om_two_months = pandas.read_excel(OM_TWO_MONTHS_PATH, sheet_name='OM', index_col=0)
@@ -613,83 +617,54 @@ with pandas.ExcelWriter(OM_OUTPUT_PATH) as writer:
 	om_name_changes_this_month.to_excel(writer, sheet_name='Name Changes')
 	om_microsoft_errors.to_excel(writer, sheet_name='Microsoft Errors')
 	country_availability.to_excel(writer, sheet_name='Microsoft Country availability', index_label='OfferId')
-	for group in config['SKU_GROUPS']:
-		structure_current = pandas.DataFrame(columns=config['APS_STRUCTURE_HEADERS'])
-		om_new_filtered = om_new[om_new['Group'] == group].sort_values(by='Offer Display Name')
-		for sku, sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():
-			if sku_data['Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
-				structure_current = structure_current.append({'OfferID': sku, 'Parent SKU + RelationID': sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': sku_data['Offer Display Name'], 'CMP Category': sku_data['CMP Category'], 'SKU In Last Month OM': sku_data['In Last Month OM'], 'Name Change': sku_data['Name Change']}, ignore_index=True)
-				if sku in list(dict.fromkeys(relations_current['ParentId'])):
-					addons_sku_list = list(dict.fromkeys(relations_current[relations_current['ParentId'] == sku]['ChildId']))
-					for relation_sku, relation_sku_data in relations_current[relations_current['ParentId'] == sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
-						structure_current = structure_current.append({'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': sku + relation_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'CMP Category': om_new.loc[relation_sku_data['ChildId'], 'CMP Category'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': relation_sku_data['Last Month'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
-						if relation_sku_data['ChildId'] in list(dict.fromkeys(relations_current['ParentId'])):
-							for addon_to_addon_sku, addon_to_addon_data in relations_current[relations_current['ParentId'] == relation_sku_data['ChildId']].sort_values(by=['ChildName', 'ChildId']).iterrows():
-								if addon_to_addon_data['ChildId'] not in addons_sku_list and config['REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS']:
-									addon_to_addon_offer_name = addon_to_addon_data['ChildName'] + " for " + sku_data['Shortened Names']
-									structure_current = structure_current.append({'OfferID': addon_to_addon_data['ChildId'], 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': addon_to_addon_offer_name, 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'], 'Name Change': om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
-
-		structure_current.to_excel(writer, sheet_name=config['SKU_GROUPS'][group]['shortname'] + ' APS')
 	
-	# New consolidated APS tab
-	structure_current = pandas.DataFrame(columns=config['APS_STRUCTURE_HEADERS_2'])
-	overall_index = 1
+	# Consolidated APS tab
+	structure_current = pandas.DataFrame(columns=config['APS_STRUCTURE_HEADERS'])
 	for group in config['SKU_GROUPS']:
 		om_new_filtered = om_new[om_new['Group'] == group].sort_values(by='Offer Display Name')
-		common_columns = {'License Type': config['SKU_GROUPS'][group]['License Type'], 'Ingram Group': config['SKU_GROUPS'][group]['Ingram Group']}
+		common_columns = {'License Type': config['SKU_GROUPS'][group]['License Type'], 'Ingram Group': config['SKU_GROUPS'][group]['Ingram Group'], 'Family': config['SKU_GROUPS'][group]['Family']}
 		for sku, sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():
 			if sku_data['Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
-				structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': sku, 'Parent SKU + RelationID': sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': sku_data['Offer Display Name'], 'CMP Category': sku_data['CMP Category'], 'SKU In Last Month OM': sku_data['In Last Month OM'], 'Name Change': sku_data['Name Change']}, ignore_index=True)
-				overall_index += 1
+				structure_current = structure_current.append({**common_columns, 'OfferID': sku, 'Parent SKU + RelationID': sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': sku_data['Offer Display Name'], 'CMP Category': sku_data['CMP Category'], 'SKU In Last Month OM': sku_data['In Last Month OM'], 'Name Change': sku_data['Name Change']}, ignore_index=True)
 				if sku in list(dict.fromkeys(relations_current['ParentId'])):
 					addons_sku_list = list(dict.fromkeys(relations_current[relations_current['ParentId'] == sku]['ChildId']))
 					for relation_sku, relation_sku_data in relations_current[relations_current['ParentId'] == sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
-						structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': sku + relation_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'CMP Category': om_new.loc[relation_sku_data['ChildId'], 'CMP Category'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': relation_sku_data['Last Month'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
-						overall_index += 1
+						structure_current = structure_current.append({**common_columns, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': sku + relation_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'CMP Category': om_new.loc[relation_sku_data['ChildId'], 'CMP Category'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': relation_sku_data['Last Month'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
 						if relation_sku_data['ChildId'] in list(dict.fromkeys(relations_current['ParentId'])):
 							for addon_to_addon_sku, addon_to_addon_data in relations_current[relations_current['ParentId'] == relation_sku_data['ChildId']].sort_values(by=['ChildName', 'ChildId']).iterrows():
 								if addon_to_addon_data['ChildId'] not in addons_sku_list and config['REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS']:
-									addon_to_addon_offer_name = addon_to_addon_data['ChildName'] + " for " + sku_data['Shortened Names']
-									structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': addon_to_addon_data['ChildId'], 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': addon_to_addon_offer_name, 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'], 'Name Change': om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
-									overall_index += 1
-	structure_current.to_excel(writer, sheet_name='APS Skus')
+									addon_to_addon_offer_name = addon_to_addon_data['ChildName'] + " for " + addon_to_addon_data['ParentName']
+									structure_current = structure_current.append({**common_columns, 'OfferID': addon_to_addon_data['ChildId'], 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': addon_to_addon_offer_name, 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'], 'Name Change': om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
+	cat_lic_type = CategoricalDtype(['Corporate','Education','Charity','Trial','Government'],ordered=True)
+	cat_ingram_group = CategoricalDtype(['O365','EM+S','Windows','M365','D365','Trial'],ordered=True)
+	structure_current['License Type'] = structure_current['License Type'].astype(cat_lic_type)
+	structure_current['Ingram Group'] = structure_current['Ingram Group'].astype(cat_ingram_group)
+	structure_current.sort_values(by=['License Type','Ingram Group'], inplace=True, ignore_index=True)
+	structure_current['Index'] = structure_current.groupby(['License Type', 'Ingram Group']).cumcount()+1
+	structure_current.index = np.arange(1, len(structure_current)+1)
+	structure_current.to_excel(writer, sheet_name='APS SKUs', index_label='Overall Index')
 
+	# Consolidated Connect Tab
+	structure_current = pandas.DataFrame(columns=config['CONNECT_STRUCTURE_HEADERS'])
 	for group in config['SKU_GROUPS']:
-		structure_current = pandas.DataFrame(columns=config['CONNECT_STRUCTURE_HEADERS'])
 		om_new_filtered = om_new[om_new['Group'] == group].sort_values(by='Offer Display Name')
+		common_columns = {'License Type': config['SKU_GROUPS'][group]['License Type'], 'Ingram Group': config['SKU_GROUPS'][group]['Ingram Group'],'Family': config['SKU_GROUPS'][group]['Family']}
 		for parent_sku, parent_sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():
 			if parent_sku_data['Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
-				structure_current = structure_current.append({'OfferID': parent_sku, 'RelationID': parent_sku, 'Parent SKU + RelationID': parent_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': parent_sku_data['Connect product category'], 'Connect Product Id': parent_sku_data['Connect Product Id'], 'Connect annual item Id': parent_sku_data['Connect annual item Id'], 'Connect annual item name': parent_sku_data['Connect annual item name'], 'Connect monthly item Id': parent_sku_data['Connect monthly item Id'], 'Connect monthly item name': parent_sku_data['Connect monthly item name'], 'Offer Display Name': parent_sku_data['Offer Display Name'], 'SKU In Last Month OM': parent_sku_data['In Last Month OM'], 'Name Change': parent_sku_data['Name Change']}, ignore_index=True)
+				structure_current = structure_current.append({**common_columns, 'OfferID': parent_sku, 'RelationID': parent_sku, 'Parent SKU + RelationID': parent_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': parent_sku_data['Connect product category'], 'Connect Product Id': parent_sku_data['Connect Product Id'], 'Connect annual item Id': parent_sku_data['Connect annual item Id'], 'Connect annual item name': parent_sku_data['Connect annual item name'], 'Connect monthly item Id': parent_sku_data['Connect monthly item Id'], 'Connect monthly item name': parent_sku_data['Connect monthly item name'], 'Offer Display Name': parent_sku_data['Offer Display Name'], 'SKU In Last Month OM': parent_sku_data['In Last Month OM'], 'Name Change': parent_sku_data['Name Change']}, ignore_index=True)
 				if parent_sku in list(dict.fromkeys(relations_current_connect['ParentId'])):
 					for relation_sku, relation_sku_data in relations_current_connect[relations_current_connect['ParentId'] == parent_sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
 						relation_sku_based_on_license_type = relation_sku_data['ChildId'] + '_' + parent_sku_data['License Type']
 						if relation_sku_based_on_license_type in connect_items.index:
-							structure_current = structure_current.append({'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': 'ADD-ON', 'Connect Product Id': connect_items.loc[relation_sku_based_on_license_type, 'Connect product'], 'Connect annual item Id': connect_items.loc[relation_sku_based_on_license_type, 'Annual item'], 'Connect annual item name': connect_items.loc[relation_sku_based_on_license_type, 'Annual name'], 'Connect monthly item Id': connect_items.loc[relation_sku_based_on_license_type, 'Monthly item'], 'Connect monthly item name': connect_items.loc[relation_sku_based_on_license_type, 'Monthly name'], 'Offer Display Name': relation_sku_data['ChildName'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
+							structure_current = structure_current.append({**common_columns, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': 'ADD-ON', 'Connect Product Id': connect_items.loc[relation_sku_based_on_license_type, 'Connect product'], 'Connect annual item Id': connect_items.loc[relation_sku_based_on_license_type, 'Annual item'], 'Connect annual item name': connect_items.loc[relation_sku_based_on_license_type, 'Annual name'], 'Connect monthly item Id': connect_items.loc[relation_sku_based_on_license_type, 'Monthly item'], 'Connect monthly item name': connect_items.loc[relation_sku_based_on_license_type, 'Monthly name'], 'Offer Display Name': relation_sku_data['ChildName'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
 						else:
-							structure_current = structure_current.append({'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'Connect product category': 'ADD-ON', 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
-		structure_current.to_excel(writer, sheet_name=config['SKU_GROUPS'][group]['shortname'] + ' Connect')
-
-	# New Consolidated Connect Tab
-	structure_current = pandas.DataFrame(columns=config['CONNECT_STRUCTURE_HEADERS_2'])
-	overall_index = 1
-	for group in config['SKU_GROUPS']:
-		om_new_filtered = om_new[om_new['Group'] == group].sort_values(by='Offer Display Name')
-		common_columns = {'License Type': config['SKU_GROUPS'][group]['License Type'], 'Ingram Group': config['SKU_GROUPS'][group]['Ingram Group']}
-		for parent_sku, parent_sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():
-			if parent_sku_data['Duration'] in config['ALLOWED_DURATIONS'] or config['INCLUDE_LONG_TERM_SKUS']:
-				structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': parent_sku, 'RelationID': parent_sku, 'Parent SKU + RelationID': parent_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': parent_sku_data['Connect product category'], 'Connect Product Id': parent_sku_data['Connect Product Id'], 'Connect annual item Id': parent_sku_data['Connect annual item Id'], 'Connect annual item name': parent_sku_data['Connect annual item name'], 'Connect monthly item Id': parent_sku_data['Connect monthly item Id'], 'Connect monthly item name': parent_sku_data['Connect monthly item name'], 'Offer Display Name': parent_sku_data['Offer Display Name'], 'SKU In Last Month OM': parent_sku_data['In Last Month OM'], 'Name Change': parent_sku_data['Name Change']}, ignore_index=True)
-				overall_index += 1
-				if parent_sku in list(dict.fromkeys(relations_current_connect['ParentId'])):
-					for relation_sku, relation_sku_data in relations_current_connect[relations_current_connect['ParentId'] == parent_sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
-						relation_sku_based_on_license_type = relation_sku_data['ChildId'] + '_' + parent_sku_data['License Type']
-						if relation_sku_based_on_license_type in connect_items.index:
-							structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Connect product category': 'ADD-ON', 'Connect Product Id': connect_items.loc[relation_sku_based_on_license_type, 'Connect product'], 'Connect annual item Id': connect_items.loc[relation_sku_based_on_license_type, 'Annual item'], 'Connect annual item name': connect_items.loc[relation_sku_based_on_license_type, 'Annual name'], 'Connect monthly item Id': connect_items.loc[relation_sku_based_on_license_type, 'Monthly item'], 'Connect monthly item name': connect_items.loc[relation_sku_based_on_license_type, 'Monthly name'], 'Offer Display Name': relation_sku_data['ChildName'], 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
-							overall_index += 1
-						else:
-							structure_current = structure_current.append({**common_columns, 'Overall Index':overall_index, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'Connect product category': 'ADD-ON', 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
-							overall_index += 1
-
-	structure_current.to_excel(writer, sheet_name='Connect Skus')
+							structure_current = structure_current.append({**common_columns, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': parent_sku + relation_sku, 'Parent SKU': parent_sku, 'Parent Name': parent_sku_data['Offer Display Name'], 'Parent Name Short': parent_sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'Connect product category': 'ADD-ON', 'SKU In Last Month OM': om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Name Change': om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
+	structure_current['License Type'] = structure_current['License Type'].astype(cat_lic_type)
+	structure_current['Ingram Group'] = structure_current['Ingram Group'].astype(cat_ingram_group)
+	structure_current.sort_values(by=['License Type','Ingram Group'], inplace=True, ignore_index=True)
+	structure_current['Index'] = structure_current.groupby(['License Type', 'Ingram Group']).cumcount()+1
+	structure_current.index = np.arange(1, len(structure_current)+1)
+	structure_current.to_excel(writer, sheet_name='Connect SKUs', index_label='Overall Index')
 #############################################################################################################################################################################################
 
 # Load Software Subscriptions DataFrames ####################################################################################################################################################
