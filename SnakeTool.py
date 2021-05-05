@@ -19,6 +19,8 @@ from dateutil.relativedelta import relativedelta
 db = TinyDB('./cache/db.json')
 logging.basicConfig(filename="snake_{0}.log".format(time.strftime("%Y%m%d-%H%M%S")), level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
+logging.info("Starting Snake!")
+
 # Read config file ##########################################################################################################################################################################
 with open('config.json') as json_data_file:
 	config = json.load(json_data_file)
@@ -720,3 +722,4 @@ with pandas.ExcelWriter(SW_OUTPUT_PATH) as writer:
 	sw_last.sort_values(by='Offer Display Name').to_excel(writer, sheet_name='SW LAST', index_label='OfferID')
 	connect_items.to_excel(writer, sheet_name='Connect items', index_label='Sku')
 #############################################################################################################################################################################################
+logging.info("Snake Completed Successfully!")

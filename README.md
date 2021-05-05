@@ -25,6 +25,12 @@ For more information, please refer to the Sharepoint [page](https://ingrammicro.
 
 # Installation
 
+Create a Python virtual environment:
+```
+python -m venv env
+source env/bin/activate
+```
+
 To install python dependencies:
 
 ```
