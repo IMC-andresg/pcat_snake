@@ -16,7 +16,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 # Load local db and logging 
-db = TinyDB('./cache/db.json')
+db = TinyDB(f'./cache/db_{date.today().strftime("%Y%m%d")}.json')
 logging.basicConfig(filename="snake_{0}.log".format(time.strftime("%Y%m%d-%H%M%S")), level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 logging.info("Starting Snake!")
