@@ -28,7 +28,7 @@ For more information, please refer to the Sharepoint [page](https://ingrammicro.
 Create a Python virtual environment:
 ```
 python -m venv env
-source env/bin/activate
+.\env\Scripts\activate
 ```
 
 To install python dependencies:
@@ -37,11 +37,16 @@ To install python dependencies:
 pip install -r requirements.txt
 ```
 
-# Usage
+# Setup
 
 1. Initialize configuration: Copy the `config_template.json` to a new file `config.json` and add your `CONNECT_TOKEN` and any other environment specific changes.
 
-2. Create / point to files directory: The tool expects a folder in the root directory "files" with the monthly offer matrices and previous output files of the tool. The folder should have at least two previous months of data to compare states. The paths of the files and names can be configured using the `config.json` file. 
+2. Create / point to files directory: The tool reads the price list and offer matrix files from the files directory. Three folders for the running month and previous two months should be created before running the tool. For example, if running for the May 2021, the following folders should be there: 202105, 202104 and 202103. Each folder should have the following files with date format YYYYMM (example files below for 202105):
+
+* files\202105\202105-Cloud-Reseller-Pricelist.xlsx
+* files\202105\202106-Cloud-Reseller-Pricelist.xlsx (this is preview price list for next month)
+* files\202105\All_202105_legacy_license_offermatrix_sheets.xlsx
+* files\202105\Software-Subscriptions-CSP-Commercial-Price-List-202105.xlsx 
 
 3. Run the tool:
 ```

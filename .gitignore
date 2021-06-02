@@ -5,3 +5,6 @@ db.json
 .vscode
 cache
 env
+__pycache__/
+*.pyc
+*$py.class
