@@ -313,7 +313,7 @@ class CSPGenerator:
                             try:
                                 if self.om_new.loc[parent_sku, 'Duration'] == children_data['Duration'] and self.om_new.loc[parent_sku, 'Group'] in self.config['SKU_GROUPS'] and children_data['License Type'] in self.config['ALLOWED_RELATIONS'][self.om_new.loc[parent_sku, 'License Type']]:
                                     self.relations_current.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
-                                    self.relations_current.loc[parent_sku + children_sku, 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
+                                    self.relations_current.loc[parent_sku + children_sku, 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in self.loader.relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
                                     self.relations_current.loc[parent_sku + children_sku, 'ChildId'] = children_sku
                                     self.relations_current.loc[parent_sku + children_sku, 'ChildName'] = self.om_new.loc[children_sku, 'Offer Display Name']
                                     self.relations_current.loc[parent_sku + children_sku, 'ChildProvisioningId'] = self.om_new.loc[children_sku, 'Provisioning ID']
@@ -339,7 +339,7 @@ class CSPGenerator:
 
                     elif self.config['EXTENDED_RELATIONS_MATRIX']:
                         self.relations_current.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
-                        self.relations_current.loc[parent_sku + children_sku, 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
+                        self.relations_current.loc[parent_sku + children_sku, 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in self.loader.relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
                         self.relations_current.loc[parent_sku + children_sku, 'ChildId'] = children_sku
                         self.relations_current.loc[parent_sku + children_sku, 'ChildName'] = children_data['Offer Display Name']
                         self.relations_current.loc[parent_sku + children_sku, 'ChildProvisioningId'] = children_data['Provisioning ID']
@@ -386,7 +386,7 @@ class CSPGenerator:
                                 if self.om_new.loc[parent_sku, 'Duration'] == children_data['Duration'] and self.om_new.loc[parent_sku, 'Group'] in self.config['SKU_GROUPS'] and children_data['License Type'] in self.config['ALLOWED_RELATIONS'][self.om_new.loc[parent_sku, 'License Type']]:
                                     if self.om_new.loc[parent_sku, 'Parent/Child'] == 'Parent':
                                         self.relations_current_connect.loc[parent_sku + children_sku, 'ParentId'] = parent_sku
-                                        self.relations_current_connect.loc[parent_sku + children_sku, 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
+                                        self.relations_current_connect.loc[parent_sku + children_sku, 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in self.loader.relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
                                         self.relations_current_connect.loc[parent_sku + children_sku, 'ChildId'] = children_sku
                                         self.relations_current_connect.loc[parent_sku + children_sku, 'ChildName'] = self.om_new.loc[children_sku, 'Offer Display Name']
                                         self.relations_current_connect.loc[parent_sku + children_sku, 'Last Month'] = self.config['DEFAULT_VALUES']['YES'] if (parent_sku + children_sku) in self.loader.relations_last.index else self.config['DEFAULT_VALUES']['NO']
@@ -411,7 +411,7 @@ class CSPGenerator:
                 self.relations_current_connect.loc[relation_sku_data['ParentId'] + addon2addon_data['ChildId'], 'ParentName'] = self.om_new.loc[relation_sku_data['ParentId'], 'Offer Display Name']
                 self.relations_current_connect.loc[relation_sku_data['ParentId'] + addon2addon_data['ChildId'], 'Child License'] = self.om_new.loc[addon2addon_data['ChildId'], 'License Type']
                 self.relations_current_connect.loc[relation_sku_data['ParentId'] + addon2addon_data['ChildId'], 'Last Month'] = self.config['DEFAULT_VALUES']['YES'] if (relation_sku_data['ParentId'] + addon2addon_data['ChildId']) in self.loader.relations_last.index else self.config['DEFAULT_VALUES']['NO']
-                self.relations_current_connect.loc[relation_sku_data['ParentId'] + addon2addon_data['ChildId'], 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (relation_sku_data['ParentId'] + addon2addon_data['ChildId']) in relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
+                self.relations_current_connect.loc[relation_sku_data['ParentId'] + addon2addon_data['ChildId'], 'Two Months Ago'] = self.config['DEFAULT_VALUES']['YES'] if (relation_sku_data['ParentId'] + addon2addon_data['ChildId']) in self.loader.relations_two_months.index else self.config['DEFAULT_VALUES']['NO']
     
         # Update last month Relations matrix to update this month's deletes
         for relation_sku, relation_sku_data in self.loader.relations_last.iterrows():

@@ -61,8 +61,6 @@ class PastMonthsLoader:
 
         self.relations_last = pandas.read_excel(self.OM_LAST_MONTH_PATH, sheet_name='RM', index_col=0)
         self.relations_two_months = pandas.read_excel(self.OM_TWO_MONTHS_PATH, sheet_name='RM', index_col=0)
-        self.relations_last_connect = pandas.read_excel(self.OM_LAST_MONTH_PATH, sheet_name='RM Connect', index_col=0)
-        self.relations_two_months_connect = pandas.read_excel(self.OM_TWO_MONTHS_PATH, sheet_name='RM Connect', index_col=0)
         self.countries_last = pandas.read_excel(self.OM_LAST_MONTH_PATH, sheet_name='CM', index_col=0)
 
         self.sw_current = pandas.read_excel(self.SW_THIS_MONTH_PATH)
