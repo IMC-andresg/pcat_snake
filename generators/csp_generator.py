@@ -160,7 +160,7 @@ class CSPGenerator:
             
             sku_group = self.om_new.loc[sku, 'Group']
             sku_group_config = self.config['SKU_GROUPS']
-            if sku_group == self.config['DEFAULT_VALUES']['MICROSOFT_ERROR']:
+            if sku_group == self.config['DEFAULT_VALUES']['MICROSOFT_ERROR'] or sku_group == "Trials":
                 self.om_new.loc[sku, 'Global Menu Group'] = sku_group
                 self.om_new.loc[sku, 'Family'] = sku_group
                 self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group
