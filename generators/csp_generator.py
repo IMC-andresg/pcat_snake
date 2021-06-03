@@ -115,7 +115,7 @@ class CSPGenerator:
                                 self.om_new.loc[sku, 'Microsoft Change'] = self.om_new.loc[sku, 'Microsoft Change'] + '\n* {0}'.format(microsoft_field)
                             else:
                                 self.om_new.loc[sku, 'Microsoft Change'] = self.om_new.loc[sku, 'Microsoft Change'] + '\n* {}: Old value: {} - New value: {}'.format(microsoft_field, self.loader.om_last.loc[sku, microsoft_field], sku_data[microsoft_field])
-            else:
+            else: # SKU not in last OM
                 self.om_new.loc[sku, 'In Last Month OM'] = self.config['DEFAULT_VALUES']['NO']
                 self.om_new.loc[sku, 'Microsoft Change'] = self.config['DEFAULT_VALUES']['NO']
                 if sku not in self.loader.om_ghost.index:
@@ -157,6 +157,29 @@ class CSPGenerator:
                 self.om_new.loc[sku, 'Old Name'] = self.loader.om_last.loc[sku, 'Offer Display Name']
             else:
                 self.om_new.loc[sku, 'Name Change'] = self.config['DEFAULT_VALUES']['NO']
+            
+            sku_group = self.om_new.loc[sku, 'Group']
+            sku_group_config = self.config['SKU_GROUPS']
+            if sku_group == self.config['DEFAULT_VALUES']['MICROSOFT_ERROR']:
+                self.om_new.loc[sku, 'Global Menu Group'] = sku_group
+                self.om_new.loc[sku, 'Family'] = sku_group
+                self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group
+                self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group
+                self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group
+                self.om_new.loc[sku, 'Vendor ID'] = sku_group
+            else:
+                self.om_new.loc[sku, 'Global Menu Group'] = sku_group_config[sku_group]['Global Menu Group']
+                self.om_new.loc[sku, 'Family'] = sku_group_config[sku_group]['OM Family']
+                self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group_config[sku_group]['Monthly Plan Cat']
+                self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group_config[sku_group]['Annual Plan Cat']
+                self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group_config[sku_group]['Resource Cat']
+                self.om_new.loc[sku, 'Vendor ID'] = sku_group_config[sku_group]['Vendor ID']
+            self.om_new.loc[sku, 'Tax Category Name US'] = self.config['CSP_TAX_CAT_NAME_US']
+            self.om_new.loc[sku, 'Tax Category Name Rest of World'] = self.config['CSP_TAX_CAT_NAME_WORLD']
+            self.om_new.loc[sku, 'Previous Months Shortened Names'] = sku_data['Offer Display Name']
+            self.om_new.loc[sku, 'BSS Monthly Name (Parents)'] = sku_data['Offer Display Name'] + " (Monthly Pre-Paid)"
+            self.om_new.loc[sku, 'BSS Annual Name (Parents)'] = sku_data['Offer Display Name'] + " (Annual Pre-Paid)"
+             
 
         for sku_in_last_not_in_current, sku_in_last_not_in_current_data in self.loader.om_last.iterrows():
             if sku_in_last_not_in_current not in self.om_new.index and sku_in_last_not_in_current in self.loader.pl_current.index and self.loader.pl_current.loc[sku_in_last_not_in_current, 'A/C/D/U'] != 'DEL':

@@ -25,6 +25,8 @@
 	"MAX_LENGTH_ADDON_SHORT_NAME": 70,
 
 	"CSP_TAX_CATEGORY": "81112106",
+	"CSP_TAX_CAT_NAME_US": "Application Service Providers (aka SaaS)",
+	"CSP_TAX_CAT_NAME_WORLD": "All Products",
 	"SW_SUBSCRIPTIONS_TAX_CATEGORY": "81112500",
 	"PERPETUAL_SW_TAX_CATEGORY": "",
 
@@ -44,7 +46,13 @@
 			"shortname": "D365 Charity",
 			"License Type": "Charity",
 			"Ingram Group": "D365",
-			"Family": "Dynamics 365"
+			"Family": "Dynamics 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Dynamics 365 Family",
+			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
+			"Annual Plan Cat": "Dynamics 365 Annual-APS",
+			"Resource Cat": "Dynamics 365 Nonprofit-APS",
+			"Vendor ID": "MP42"
 		},
 		"Dynamics 365 Corporate": {
 			"CMP Category": "Dynamics Flat Catalogue Corporate",
@@ -53,7 +61,13 @@
 			"shortname": "D365 Corporate",
 			"License Type": "Corporate",
 			"Ingram Group": "D365",
-			"Family": "Dynamics 365"
+			"Family": "Dynamics 365",
+			"Global Menu Group": "Business Applications",
+			"OM Family": "Dynamics 365 Family",
+			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
+			"Annual Plan Cat": "Dynamics 365 Annual-APS",
+			"Resource Cat": "Dynamics 365 Commercial-APS",
+			"Vendor ID": "MP42"
 		},
 		"Dynamics 365 Education": {
 			"CMP Category": "Dynamics Flat Catalogue Education",
@@ -62,7 +76,13 @@
 			"shortname": "D365 Education",
 			"License Type": "Education",
 			"Ingram Group": "D365",
-			"Family": "Dynamics 365"
+			"Family": "Dynamics 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Dynamics 365 Family",
+			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
+			"Annual Plan Cat": "Dynamics 365 Annual-APS",
+			"Resource Cat": "Dynamics 365 Education-APS",
+			"Vendor ID": "MP42"
 		},
 		"Dynamics 365 GCC": {
 			"CMP Category": "Dynamics Flat Catalogue Government",
@@ -71,7 +91,13 @@
 			"shortname": "D365 GCC",
 			"License Type": "Government",
 			"Ingram Group": "D365",
-			"Family": "Dynamics 365"
+			"Family": "Dynamics 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Dynamics 365 Family",
+			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
+			"Annual Plan Cat": "Dynamics 365 Annual-APS",
+			"Resource Cat": "Dynamics 365 Government-APS",
+			"Vendor ID": "MP42"
 		},
 		"EM+S Charity": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -80,7 +106,13 @@
 			"shortname": "EM+S Charity",
 			"License Type": "Charity",
 			"Ingram Group": "EM+S",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Nonprofit-APS",
+			"Vendor ID": "MP64"
 		},
 		"EM+S Corporate": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -89,7 +121,13 @@
 			"shortname": "EM+S Corporate",
 			"License Type": "Corporate",
 			"Ingram Group": "EM+S",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Business Applications",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Commercial-APS",
+			"Vendor ID": "MP64"
 		},
 		"EM+S Education": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -98,7 +136,13 @@
 			"shortname": "EM+S Education",
 			"License Type": "Education",
 			"Ingram Group": "EM+S",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Education-APS",
+			"Vendor ID": "MP64"
 		},
 		"EM+S GCC": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -107,7 +151,13 @@
 			"shortname": "EM+S GCC",
 			"License Type": "Government",
 			"Ingram Group": "EM+S",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Government-APS",
+			"Vendor ID": "MP64"
 		},
 		"Microsoft 365 Charity": {
 			"CMP Category": "Microsoft 365 Charity",
@@ -116,7 +166,13 @@
 			"shortname": "M365 Charity",
 			"License Type": "Charity",
 			"Ingram Group": "M365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Nonprofit-APS",
+			"Vendor ID": "MP62"
 		},
 		"Microsoft 365 Corporate": {
 			"CMP Category": "Microsoft 365 Business",
@@ -125,7 +181,13 @@
 			"shortname": "M365 Corporate",
 			"License Type": "Corporate",
 			"Ingram Group": "M365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Business Applications",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Commercial-APS",
+			"Vendor ID": "MP62"
 		},
 		"Microsoft 365 Education": {
 			"CMP Category": "Microsoft 365 Education",
@@ -134,7 +196,13 @@
 			"shortname": "M365 Education",
 			"License Type": "Education",
 			"Ingram Group": "M365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Education-APS",
+			"Vendor ID": "MP62"
 		},
 		"Microsoft 365 GCC": {
 			"CMP Category": "Microsoft 365 Enterprise",
@@ -143,7 +211,13 @@
 			"shortname": "M365 GCC",
 			"License Type": "Government",
 			"Ingram Group": "M365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Government-APS",
+			"Vendor ID": "MP62"
 		},
 		"Office 365 Charity": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -152,7 +226,13 @@
 			"shortname": "O365 Charity",
 			"License Type": "Charity",
 			"Ingram Group": "O365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Nonprofit-APS",
+			"Vendor ID": "MP61"
 		},
 		"Office 365 Corporate": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -161,7 +241,13 @@
 			"shortname": "O365 Corporate",
 			"License Type": "Corporate",
 			"Ingram Group": "O365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Business Applications",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Commercial-APS",
+			"Vendor ID": "MP61"
 		},
 		"Office 365 Education": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -170,7 +256,13 @@
 			"shortname": "O365 Education",
 			"License Type": "Education",
 			"Ingram Group": "O365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Education-APS",
+			"Vendor ID": "MP61"
 		},
 		"Office 365 GCC": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -179,7 +271,13 @@
 			"shortname": "O365 GCC",
 			"License Type": "Government",
 			"Ingram Group": "O365",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Government-APS",
+			"Vendor ID": "MP61"
 		},
 		"Windows 10 Charity": {
 			"CMP Category": "Windows 10 Charity",
@@ -188,7 +286,13 @@
 			"shortname": "W10 Charity",
 			"License Type": "Charity",
 			"Ingram Group": "Windows",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Nonprofit-APS",
+			"Vendor ID": "MP63"
 		},
 		"Windows 10 Corporate": {
 			"CMP Category": "Windows 10 Enterprise",
@@ -197,7 +301,13 @@
 			"shortname": "W10 Corporate",
 			"License Type": "Corporate",
 			"Ingram Group": "Windows",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Business Applications",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Commercial-APS",
+			"Vendor ID": "MP63"
 		},
 		"Windows 10 Education": {
 			"CMP Category": "Windows 10 Education",
@@ -206,7 +316,13 @@
 			"shortname": "W10 Education",
 			"License Type": "Education",
 			"Ingram Group": "Windows",
-			"Family": "Office 365"
+			"Family": "Office 365",
+			"Global Menu Group": "Industry Solutions",
+			"OM Family": "Microsoft 365 Family",
+			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
+			"Annual Plan Cat": "Microsoft 365 Annual-APS",
+			"Resource Cat": "Microsoft 365 Education-APS",
+			"Vendor ID": "MP63"
 		},
 		"Trials": {
 			"shortname": "Trials",
@@ -221,7 +337,9 @@
 		"Depends On", "Can Convert To", "Offer URI", "LearnMoreLink", "Offer Display Description", "Allowed Countries", "GUID + Offer Name",
 		"GUID + Offer Name in last month OM", "GUID in last month OM", "Name Change", "Old Name", "License Type", "In Two Months Ago PL", "In Last Month PL", "In current PL",
 		"In Next Month PL", "Shortened Names", "Length", "Microsoft Change", "Connect Product Id", "Connect product name", "Connect product category", "Connect annual item Id", "Connect annual item name", "Connect monthly item Id", "Connect monthly item name",
-		"Connect onetime item Id", "Connect onetime item name"],
+		"Connect onetime item Id", "Connect onetime item name", "Global Menu Group", "Family", "Plan Category Monthly (major group, billing, tax)", "Plan Category Annual (major group, billing, tax)",
+		"Resource Category (major group, industry, tax)", "Tax Category Name US", "Tax Category Name Rest of World", "Previous Months Shortened Names", "Vendor ID",
+		"BSS Monthly Name (Parents)", "BSS Annual Name (Parents)"],
 
 	"APS_RELATIONS_HEADERS": ["Two Months Ago", "Last Month", "ParentId", "Reasons", "Parent In OM", "Parent Group", "Parent License", "Parent/Child", "Parent CMP Category",
 		"Parent Sales Category", "ParentName", "ParentProvisioningId", "ChildId", "Child License", "ChildName", "ChildProvisioningId", "Parent Change",
