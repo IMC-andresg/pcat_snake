@@ -2,31 +2,23 @@ import json
 import logging
 import os
 import time
-
 import pandas
 import requests
-
 from datetime import date
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-
 from generators.csp_generator import CSPGenerator
 from generators.sw_generator import SWGenerator
 from loaders.past_months_loader import PastMonthsLoader
 
-
-# Load local db and logging 
-
 logging.basicConfig(filename="snake_{0}.log".format(time.strftime("%Y%m%d-%H%M%S")), level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-
 logging.info("Starting Snake!")
 
-# Read config file ##########################################################################################################################################################################
+# Read config file
 with open('config.json') as json_data_file:
 	config = json.load(json_data_file)
-#############################################################################################################################################################################################
 
-# Load Connect items ########################################################################################################################################################################
+# Load Connect items
 logging.info("Loading Connect items")
 cached_connect_items = f'./cache/connectitems_{date.today().strftime("%Y%m%d")}.pkl'
 if os.path.exists(cached_connect_items):
@@ -62,16 +54,12 @@ else:
 			params = {'limit': config['CONNECT_PARAMS']['LIMIT'], 'offset': offset}
 			response = requests.get(url, headers=headers, params=params).json()
 	connect_items.to_pickle(cached_connect_items)
-#############################################################################################################################################################################################
 
 loader = PastMonthsLoader(config)
 loader.init_paths()
 loader.load_files()
 
-#############################################################################################################################################################################################
-
 CSPGenerator(config, loader, connect_items).generate()
 SWGenerator(config, loader, connect_items).generate()
 
-#############################################################################################################################################################################################
 logging.info("Snake Completed Successfully!")

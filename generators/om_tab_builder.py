@@ -13,6 +13,29 @@ class OMTabBuilder:
         self.db = TinyDB(f'./cache/db_{date.today().strftime("%Y%m%d")}.json')
         self.om_new = pandas.DataFrame(columns=config['OM_HEADERS'])
 
+    def add_common_columns(self, sku, sku_data):
+        sku_group = self.om_new.loc[sku, 'Group']
+        sku_group_config = self.config['SKU_GROUPS']
+        if sku_group == self.config['DEFAULT_VALUES']['MICROSOFT_ERROR'] or sku_group == "Trials":
+            self.om_new.loc[sku, 'Global Menu Group'] = sku_group
+            self.om_new.loc[sku, 'Family'] = sku_group
+            self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group
+            self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group
+            self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group
+            self.om_new.loc[sku, 'Vendor ID'] = sku_group
+        else:
+            self.om_new.loc[sku, 'Global Menu Group'] = sku_group_config[sku_group]['Global Menu Group']
+            self.om_new.loc[sku, 'Family'] = sku_group_config[sku_group]['OM Family']
+            self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group_config[sku_group]['Monthly Plan Cat']
+            self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group_config[sku_group]['Annual Plan Cat']
+            self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group_config[sku_group]['Resource Cat']
+            self.om_new.loc[sku, 'Vendor ID'] = sku_group_config[sku_group]['Vendor ID']
+        self.om_new.loc[sku, 'Tax Category Name US'] = self.config['CSP_TAX_CAT_NAME_US']
+        self.om_new.loc[sku, 'Tax Category Name Rest of World'] = self.config['CSP_TAX_CAT_NAME_WORLD']
+        self.om_new.loc[sku, 'Previous Months Shortened Names'] = sku_data['Offer Display Name']
+        self.om_new.loc[sku, 'BSS Monthly Name (Parents)'] = sku_data['Offer Display Name'] + " (Monthly Pre-Paid)"
+        self.om_new.loc[sku, 'BSS Annual Name (Parents)'] = sku_data['Offer Display Name'] + " (Annual Pre-Paid)"
+
     def build(self):
         # Generate this month's OM
         logging.info("Generating this month's OM")
@@ -126,28 +149,7 @@ class OMTabBuilder:
                 self.om_new.loc[sku, 'Old Name'] = self.loader.om_last.loc[sku, 'Offer Display Name']
             else:
                 self.om_new.loc[sku, 'Name Change'] = self.config['DEFAULT_VALUES']['NO']
-            
-            sku_group = self.om_new.loc[sku, 'Group']
-            sku_group_config = self.config['SKU_GROUPS']
-            if sku_group == self.config['DEFAULT_VALUES']['MICROSOFT_ERROR'] or sku_group == "Trials":
-                self.om_new.loc[sku, 'Global Menu Group'] = sku_group
-                self.om_new.loc[sku, 'Family'] = sku_group
-                self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group
-                self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group
-                self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group
-                self.om_new.loc[sku, 'Vendor ID'] = sku_group
-            else:
-                self.om_new.loc[sku, 'Global Menu Group'] = sku_group_config[sku_group]['Global Menu Group']
-                self.om_new.loc[sku, 'Family'] = sku_group_config[sku_group]['OM Family']
-                self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group_config[sku_group]['Monthly Plan Cat']
-                self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group_config[sku_group]['Annual Plan Cat']
-                self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group_config[sku_group]['Resource Cat']
-                self.om_new.loc[sku, 'Vendor ID'] = sku_group_config[sku_group]['Vendor ID']
-            self.om_new.loc[sku, 'Tax Category Name US'] = self.config['CSP_TAX_CAT_NAME_US']
-            self.om_new.loc[sku, 'Tax Category Name Rest of World'] = self.config['CSP_TAX_CAT_NAME_WORLD']
-            self.om_new.loc[sku, 'Previous Months Shortened Names'] = sku_data['Offer Display Name']
-            self.om_new.loc[sku, 'BSS Monthly Name (Parents)'] = sku_data['Offer Display Name'] + " (Monthly Pre-Paid)"
-            self.om_new.loc[sku, 'BSS Annual Name (Parents)'] = sku_data['Offer Display Name'] + " (Annual Pre-Paid)"
+            self.add_common_columns(sku, sku_data)
              
 
         for sku_in_last_not_in_current, sku_in_last_not_in_current_data in self.loader.om_last.iterrows():
@@ -188,6 +190,7 @@ class OMTabBuilder:
                 self.om_new.loc[sku_in_last_not_in_current, 'In Last Month PL'] = self.loader.pl_last.loc[sku_in_last_not_in_current, 'A/C/D/U'] if sku_in_last_not_in_current in self.loader.pl_last.index else self.config['DEFAULT_VALUES']['NO']
                 self.om_new.loc[sku_in_last_not_in_current, 'In Two Months Ago PL'] = self.loader.pl_two_months.loc[sku_in_last_not_in_current, 'A/C/D/U'] if sku_in_last_not_in_current in self.loader.pl_two_months.index else self.config['DEFAULT_VALUES']['NO']
                 self.om_new.loc[sku_in_last_not_in_current, 'Microsoft Change'] = self.config['DEFAULT_VALUES']['NO']
+                self.add_common_columns(sku_in_last_not_in_current, sku_in_last_not_in_current_data)
 
         for manual_sku, manual_sku_data in self.loader.om_last[self.loader.om_last['Manually Added'] == self.config['DEFAULT_VALUES']['YES']].iterrows():
             if manual_sku not in self.om_new.index:
@@ -236,6 +239,7 @@ class OMTabBuilder:
                     self.om_new.loc[manual_sku, 'Connect monthly item Id'] = self.connect_items.loc[connect_sku_with_license_type, 'Monthly item']
                 if connect_sku_with_license_type in self.connect_items.index and pandas.notna(self.connect_items.loc[connect_sku_with_license_type, 'Monthly name']):
                     self.om_new.loc[manual_sku, 'Connect monthly item name'] = self.connect_items.loc[connect_sku_with_license_type, 'Monthly name']
+                self.add_common_columns(manual_sku, manual_sku_data)
         return self.om_new
     
     def request_info(self, name, choices=None, sku=None, sku_name=None, sku_pl_two_months_ago=None, sku_pl_last_month=None, sku_pl_current=None, sku_pl_next_month=None, sku_license_type=None):
