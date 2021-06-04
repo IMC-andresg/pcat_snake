@@ -42,7 +42,6 @@ class OMTabBuilder:
         # Copy previous translations from last om or most recent version of the om 
         if sku in self.loader.om_ghost.index or sku in self.loader.om_last.index:
             # TODO check if description has changed and then translate it
-            # TODO check if a manual sku already has a translation 
             copy_from = self.loader.om_ghost if sku in self.loader.om_ghost.index else self.loader.om_last
             self.om_new.loc[sku, 'Offer Display Description France (FR)'] = copy_from.loc[sku, 'Offer Display Description France (FR)']
             self.om_new.loc[sku, 'Offer Display Description Germany (DE)'] = copy_from.loc[sku, 'Offer Display Description Germany (DE)']
