@@ -4,6 +4,7 @@ import logging
 from tinydb import Query, TinyDB
 from datetime import date
 import tabulate
+from utils.text_translator import DeepLTranslator
 
 class OMTabBuilder:
     def __init__(self, config, loader, connect_items):
@@ -12,6 +13,7 @@ class OMTabBuilder:
         self.connect_items = connect_items
         self.db = TinyDB(f'./cache/db_{date.today().strftime("%Y%m%d")}.json')
         self.om_new = pandas.DataFrame(columns=config['OM_HEADERS'])
+        self.translator = DeepLTranslator(config)
 
     def add_common_columns(self, sku, sku_data):
         sku_group = self.om_new.loc[sku, 'Group']
@@ -35,6 +37,26 @@ class OMTabBuilder:
         self.om_new.loc[sku, 'Previous Months Shortened Names'] = sku_data['Offer Display Name']
         self.om_new.loc[sku, 'BSS Monthly Name (Parents)'] = sku_data['Offer Display Name'] + " (Monthly Pre-Paid)"
         self.om_new.loc[sku, 'BSS Annual Name (Parents)'] = sku_data['Offer Display Name'] + " (Annual Pre-Paid)"
+
+    def add_sku_description_translations(self, sku, sku_data):
+        # Copy previous translations from last om or most recent version of the om 
+        if sku in self.loader.om_ghost.index or sku in self.loader.om_last.index:
+            # TODO check if description has changed and then translate it
+            copy_from = self.loader.om_ghost if sku in self.loader.om_ghost.index else self.loader.om_last
+            self.om_new.loc[sku, 'Offer Display Description France (FR)'] = copy_from.loc[sku, 'Offer Display Description France (FR)']
+            self.om_new.loc[sku, 'Offer Display Description Germany (DE)'] = copy_from.loc[sku, 'Offer Display Description Germany (DE)']
+            self.om_new.loc[sku, 'Offer Display Description Italian (IT)'] = copy_from.loc[sku, 'Offer Display Description Italian (IT)']
+            self.om_new.loc[sku, 'Offer Display Description Portuguese (PT)'] = copy_from.loc[sku, 'Offer Display Description Portuguese (PT)']
+            self.om_new.loc[sku, 'Offer Display Description (Spanish) ES'] = copy_from.loc[sku, 'Offer Display Description (Spanish) ES']
+            self.om_new.loc[sku, 'New Translations'] = copy_from.loc[sku, 'New Translations']
+        else:
+            en_desc = sku_data['Offer Display Description']
+            self.om_new.loc[sku, 'Offer Display Description France (FR)'] = self.translator.translate(en_desc, DeepLTranslator.FRENCH)
+            self.om_new.loc[sku, 'Offer Display Description Germany (DE)'] = self.translator.translate(en_desc, DeepLTranslator.GERMAN)
+            self.om_new.loc[sku, 'Offer Display Description Italian (IT)'] = self.translator.translate(en_desc, DeepLTranslator.ITALIAN)
+            self.om_new.loc[sku, 'Offer Display Description Portuguese (PT)'] = self.translator.translate(en_desc, DeepLTranslator.PORTUGUESE)
+            self.om_new.loc[sku, 'Offer Display Description (Spanish) ES'] = self.translator.translate(en_desc, DeepLTranslator.SPANISH)
+            self.om_new.loc[sku, 'New Translations'] = self.config['DEFAULT_VALUES']['YES']
 
     def build(self):
         # Generate this month's OM
@@ -150,6 +172,7 @@ class OMTabBuilder:
             else:
                 self.om_new.loc[sku, 'Name Change'] = self.config['DEFAULT_VALUES']['NO']
             self.add_common_columns(sku, sku_data)
+            self.add_sku_description_translations(sku, sku_data)
              
 
         for sku_in_last_not_in_current, sku_in_last_not_in_current_data in self.loader.om_last.iterrows():
@@ -191,6 +214,7 @@ class OMTabBuilder:
                 self.om_new.loc[sku_in_last_not_in_current, 'In Two Months Ago PL'] = self.loader.pl_two_months.loc[sku_in_last_not_in_current, 'A/C/D/U'] if sku_in_last_not_in_current in self.loader.pl_two_months.index else self.config['DEFAULT_VALUES']['NO']
                 self.om_new.loc[sku_in_last_not_in_current, 'Microsoft Change'] = self.config['DEFAULT_VALUES']['NO']
                 self.add_common_columns(sku_in_last_not_in_current, sku_in_last_not_in_current_data)
+                self.add_sku_description_translations(sku_in_last_not_in_current, sku_in_last_not_in_current_data)
 
         for manual_sku, manual_sku_data in self.loader.om_last[self.loader.om_last['Manually Added'] == self.config['DEFAULT_VALUES']['YES']].iterrows():
             if manual_sku not in self.om_new.index:
@@ -240,6 +264,7 @@ class OMTabBuilder:
                 if connect_sku_with_license_type in self.connect_items.index and pandas.notna(self.connect_items.loc[connect_sku_with_license_type, 'Monthly name']):
                     self.om_new.loc[manual_sku, 'Connect monthly item name'] = self.connect_items.loc[connect_sku_with_license_type, 'Monthly name']
                 self.add_common_columns(manual_sku, manual_sku_data)
+                self.add_sku_description_translations(manual_sku, manual_sku_data)
         return self.om_new
     
     def request_info(self, name, choices=None, sku=None, sku_name=None, sku_pl_two_months_ago=None, sku_pl_last_month=None, sku_pl_current=None, sku_pl_next_month=None, sku_license_type=None):

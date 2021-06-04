@@ -339,7 +339,9 @@
 		"In Next Month PL", "Shortened Names", "Length", "Microsoft Change", "Connect Product Id", "Connect product name", "Connect product category", "Connect annual item Id", "Connect annual item name", "Connect monthly item Id", "Connect monthly item name",
 		"Connect onetime item Id", "Connect onetime item name", "Global Menu Group", "Family", "Plan Category Monthly (major group, billing, tax)", "Plan Category Annual (major group, billing, tax)",
 		"Resource Category (major group, industry, tax)", "Tax Category Name US", "Tax Category Name Rest of World", "Previous Months Shortened Names", "Vendor ID",
-		"BSS Monthly Name (Parents)", "BSS Annual Name (Parents)"],
+		"BSS Monthly Name (Parents)", "BSS Annual Name (Parents)", "Offer Display Description France (FR)","Offer Display Description Germany (DE)",
+		"Offer Display Description Italian (IT)", "Offer Display Description Portuguese (PT)", "Offer Display Description (Spanish) ES",
+		"New Translations"],
 
 	"APS_RELATIONS_HEADERS": ["Two Months Ago", "Last Month", "ParentId", "Reasons", "Parent In OM", "Parent Group", "Parent License", "Parent/Child", "Parent CMP Category",
 		"Parent Sales Category", "ParentName", "ParentProvisioningId", "ChildId", "Child License", "ChildName", "ChildProvisioningId", "Parent Change",
@@ -381,6 +383,7 @@
 	},
 
 	"CONNECT_TOKEN": "ApiKey INSERT-YOUR-CONNECT-API-KEY-HERE",
+	"DEEPL_AUTH_KEY": "INSERT-DEEPL-API-KEY-HERE",
 
 	"CONNECT_URLS": {
 		"ITEMS": "https://api.connect.cloud.im/public/v1/products/<PRODUCT_ID>/items", 
