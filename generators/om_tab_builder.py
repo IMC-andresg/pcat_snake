@@ -49,6 +49,7 @@ class OMTabBuilder:
             self.om_new.loc[sku, 'Offer Display Description Italian (IT)'] = copy_from.loc[sku, 'Offer Display Description Italian (IT)']
             self.om_new.loc[sku, 'Offer Display Description Portuguese (PT)'] = copy_from.loc[sku, 'Offer Display Description Portuguese (PT)']
             self.om_new.loc[sku, 'Offer Display Description (Spanish) ES'] = copy_from.loc[sku, 'Offer Display Description (Spanish) ES']
+            self.om_new.loc[sku, 'New Translations'] = copy_from.loc[sku, 'New Translations']
         else:
             en_desc = sku_data['Offer Display Description']
             self.om_new.loc[sku, 'Offer Display Description France (FR)'] = self.translator.translate(en_desc, DeepLTranslator.FRENCH)
@@ -56,6 +57,7 @@ class OMTabBuilder:
             self.om_new.loc[sku, 'Offer Display Description Italian (IT)'] = self.translator.translate(en_desc, DeepLTranslator.ITALIAN)
             self.om_new.loc[sku, 'Offer Display Description Portuguese (PT)'] = self.translator.translate(en_desc, DeepLTranslator.PORTUGUESE)
             self.om_new.loc[sku, 'Offer Display Description (Spanish) ES'] = self.translator.translate(en_desc, DeepLTranslator.SPANISH)
+            self.om_new.loc[sku, 'New Translations'] = self.config['DEFAULT_VALUES']['YES']
 
     def build(self):
         # Generate this month's OM
