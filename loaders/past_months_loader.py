@@ -44,6 +44,7 @@ class PastMonthsLoader:
 
     def load_files(self):
         logging.info("Load OM & PL files")
+        self.init_paths()
         self.om_current = pandas.read_excel(self.OM_THIS_MONTH_PATH, sheet_name='Office_Dynamics_Windows_Intune', index_col=1)
         self.om_last = pandas.read_excel(self.OM_LAST_MONTH_PATH, sheet_name='OM', index_col=0)
         self.om_two_months = pandas.read_excel(self.OM_TWO_MONTHS_PATH, sheet_name='OM', index_col=0)
@@ -70,6 +71,8 @@ class PastMonthsLoader:
         # Update last month OM to update this month's deletes
         for sku, sku_data in self.om_last.iterrows():
 	        self.om_last.loc[sku, 'In Next Month OM'] = self.config['DEFAULT_VALUES']['YES'] if sku in self.om_current.index else self.config['DEFAULT_VALUES']['NO']
+        
+        return self
 
     def read_pl_file(self, file_path):
         sheet_map = pandas.read_excel(file_path, sheet_name=None)
