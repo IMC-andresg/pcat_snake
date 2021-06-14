@@ -52,7 +52,8 @@
 			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
 			"Annual Plan Cat": "Dynamics 365 Annual-APS",
 			"Resource Cat": "Dynamics 365 Nonprofit-APS",
-			"Vendor ID": "MP42"
+			"Vendor ID": "MP42",
+			"Description for CCPv2 Tile": "Unify CRM and ERP capabilities and break down data silos with Dynamics 365—modern, intelligent cloud applications that help move your business forward."
 		},
 		"Dynamics 365 Corporate": {
 			"CMP Category": "Dynamics Flat Catalogue Corporate",
@@ -67,7 +68,8 @@
 			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
 			"Annual Plan Cat": "Dynamics 365 Annual-APS",
 			"Resource Cat": "Dynamics 365 Commercial-APS",
-			"Vendor ID": "MP42"
+			"Vendor ID": "MP42",
+			"Description for CCPv2 Tile": "Unify CRM and ERP capabilities and break down data silos with Dynamics 365—modern, intelligent cloud applications that help move your business forward."
 		},
 		"Dynamics 365 Education": {
 			"CMP Category": "Dynamics Flat Catalogue Education",
@@ -82,7 +84,8 @@
 			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
 			"Annual Plan Cat": "Dynamics 365 Annual-APS",
 			"Resource Cat": "Dynamics 365 Education-APS",
-			"Vendor ID": "MP42"
+			"Vendor ID": "MP42",
+			"Description for CCPv2 Tile": "Unify CRM and ERP capabilities and break down data silos with Dynamics 365—modern, intelligent cloud applications that help move your business forward."
 		},
 		"Dynamics 365 GCC": {
 			"CMP Category": "Dynamics Flat Catalogue Government",
@@ -97,7 +100,8 @@
 			"Monthly Plan Cat": "Dynamics 365 Monthly-APS",
 			"Annual Plan Cat": "Dynamics 365 Annual-APS",
 			"Resource Cat": "Dynamics 365 Government-APS",
-			"Vendor ID": "MP42"
+			"Vendor ID": "MP42",
+			"Description for CCPv2 Tile": "Not configured yet in Ingram Mirco, only available in the US"
 		},
 		"EM+S Charity": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -112,7 +116,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Nonprofit-APS",
-			"Vendor ID": "MP64"
+			"Vendor ID": "MP64",
+			"Description for CCPv2 Tile": "EMS and Azure can help you manage the complexity of existing platforms and add new capabilities to deliver cloud-bases services anytime, anywhere on any device."
 		},
 		"EM+S Corporate": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -127,7 +132,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Commercial-APS",
-			"Vendor ID": "MP64"
+			"Vendor ID": "MP64",
+			"Description for CCPv2 Tile": "EMS and Azure can help you manage the complexity of existing platforms and add new capabilities to deliver cloud-bases services anytime, anywhere on any device."
 		},
 		"EM+S Education": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -142,7 +148,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Education-APS",
-			"Vendor ID": "MP64"
+			"Vendor ID": "MP64",
+			"Description for CCPv2 Tile": "EMS and Azure can help you manage the complexity of existing platforms and add new capabilities to deliver cloud-bases services anytime, anywhere on any device."
 		},
 		"EM+S GCC": {
 			"CMP Category": "Enterprise Mobility Suite",
@@ -157,7 +164,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Government-APS",
-			"Vendor ID": "MP64"
+			"Vendor ID": "MP64",
+			"Description for CCPv2 Tile": "Not configured yet in Ingram Mirco, only available in the US"
 		},
 		"Microsoft 365 Charity": {
 			"CMP Category": "Microsoft 365 Charity",
@@ -172,7 +180,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Nonprofit-APS",
-			"Vendor ID": "MP62"
+			"Vendor ID": "MP62",
+			"Description for CCPv2 Tile": "Empower educators to unlock creativity, promote teamwork, and provide a simple and safe experience in a single, affordable solution built for not for profit organizations."
 		},
 		"Microsoft 365 Corporate": {
 			"CMP Category": "Microsoft 365 Business",
@@ -187,7 +196,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Commercial-APS",
-			"Vendor ID": "MP62"
+			"Vendor ID": "MP62",
+			"Description for CCPv2 Tile": "The most trusted, secure, and productive way to work that brings together the best of Office 365, Enterprise Mobility + Security, and Windows 10 Enterprise."
 		},
 		"Microsoft 365 Education": {
 			"CMP Category": "Microsoft 365 Education",
@@ -202,7 +212,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Education-APS",
-			"Vendor ID": "MP62"
+			"Vendor ID": "MP62",
+			"Description for CCPv2 Tile": "Empower educators to unlock creativity, promote teamwork, and provide a simple and safe experience in a single, affordable solution built for education."
 		},
 		"Microsoft 365 GCC": {
 			"CMP Category": "Microsoft 365 Enterprise",
@@ -217,7 +228,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Government-APS",
-			"Vendor ID": "MP62"
+			"Vendor ID": "MP62",
+			"Description for CCPv2 Tile": "Not configured yet in Ingram Mirco, only available in the US"
 		},
 		"Office 365 Charity": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -232,7 +244,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Nonprofit-APS",
-			"Vendor ID": "MP61"
+			"Vendor ID": "MP61",
+			"Description for CCPv2 Tile": "Cloud-based tools designed to help meet your organization's needs for robust security, reliability, and user productivity"
 		},
 		"Office 365 Corporate": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -247,7 +260,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Commercial-APS",
-			"Vendor ID": "MP61"
+			"Vendor ID": "MP61",
+			"Description for CCPv2 Tile": "Cloud-based tools designed to help meet your organization's needs for robust security, reliability, and user productivity"
 		},
 		"Office 365 Education": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -262,7 +276,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Education-APS",
-			"Vendor ID": "MP61"
+			"Vendor ID": "MP61",
+			"Description for CCPv2 Tile": "Cloud-based tools designed to help meet your organization's needs for robust security, reliability, and user productivity"
 		},
 		"Office 365 GCC": {
 			"CMP Category": "Communication and Collaboration Tools",
@@ -277,7 +292,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Government-APS",
-			"Vendor ID": "MP61"
+			"Vendor ID": "MP61",
+			"Description for CCPv2 Tile": "Not configured yet in Ingram Mirco, only available in the US"
 		},
 		"Windows 10 Charity": {
 			"CMP Category": "Windows 10 Charity",
@@ -292,7 +308,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Nonprofit-APS",
-			"Vendor ID": "MP63"
+			"Vendor ID": "MP63",
+			"Description for CCPv2 Tile": "Microsoft Windows 10 for Charity staff to access files and collaborate with peers from anywhere, across all devices."
 		},
 		"Windows 10 Corporate": {
 			"CMP Category": "Windows 10 Enterprise",
@@ -307,7 +324,9 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Commercial-APS",
-			"Vendor ID": "MP63"
+			"Vendor ID": "MP63",
+			"Description for CCPv2 Tile": "Windows 10 Enterprise builds on a strong foundation of Windows 10 Professional, adding premium security and management features designed to address the needs of larger organizations. Single subscription limit."
+
 		},
 		"Windows 10 Education": {
 			"CMP Category": "Windows 10 Education",
@@ -322,7 +341,8 @@
 			"Monthly Plan Cat": "Microsoft 365 Monthly-APS",
 			"Annual Plan Cat": "Microsoft 365 Annual-APS",
 			"Resource Cat": "Microsoft 365 Education-APS",
-			"Vendor ID": "MP63"
+			"Vendor ID": "MP63",
+			"Description for CCPv2 Tile": "Microsoft Windows 10 for Education enables faculty and students to access files and collaborate with peers from anywhere, across all devices."
 		},
 		"Trials": {
 			"shortname": "Trials",
@@ -333,7 +353,8 @@
 	},
 
 	"OM_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "In Next Month OM", "Manually Added", "Offer Display Name", "Provisioning ID", "Group", "Parent/Child", "CMP Category", "Parent Category",
-		"Sales Category", "Tax Category", "Offer Type", "Duration", "Billing Frequency", "Min Seat Count", "Max Seat Count", "Offer Limit", "Offer Limit Scope",
+		"Sales Category", "Description for CCPv2 Tile", "Tax Category", "Offer Type", "Duration", "Billing Frequency", "Monthly Billing Model", "Monthly Billing Period", "Annual Billing Model", 
+		"Annual Billing Period", "Min Seat Count", "Max Seat Count", "Ingram Max Seat Count", "Offer Limit", "Offer Limit Scope",
 		"Depends On", "Can Convert To", "Offer URI", "LearnMoreLink", "Offer Display Description", "Allowed Countries", "GUID + Offer Name",
 		"GUID + Offer Name in last month OM", "GUID in last month OM", "Name Change", "Old Name", "License Type", "In Two Months Ago PL", "In Last Month PL", "In current PL",
 		"In Next Month PL", "Shortened Names", "Length", "Microsoft Change", "Connect Product Id", "Connect product name", "Connect product category", "Connect annual item Id", "Connect annual item name", "Connect monthly item Id", "Connect monthly item name",

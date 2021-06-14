@@ -44,4 +44,4 @@ class ConnectItemsLoader:
                     params = {'limit': config['CONNECT_PARAMS']['LIMIT'], 'offset': offset}
                     response = requests.get(url, headers=headers, params=params).json()
             connect_items.to_pickle(cached_connect_items)
-            return connect_items
+        return connect_items
