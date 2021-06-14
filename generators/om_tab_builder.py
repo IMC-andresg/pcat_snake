@@ -6,6 +6,8 @@ from datetime import date
 import tabulate
 from utils.text_translator import DeepLTranslator
 
+INGRAM_MAX_SEAT_COUNT = 5000
+
 class OMTabBuilder:
     def __init__(self, config, loader, connect_items):
         self.config = config
@@ -37,6 +39,15 @@ class OMTabBuilder:
         self.om_new.loc[sku, 'Previous Months Shortened Names'] = sku_data['Offer Display Name']
         self.om_new.loc[sku, 'BSS Monthly Name (Parents)'] = sku_data['Offer Display Name'] + " (Monthly Pre-Paid)"
         self.om_new.loc[sku, 'BSS Annual Name (Parents)'] = sku_data['Offer Display Name'] + " (Annual Pre-Paid)"
+        self.om_new.loc[sku, 'Ingram Max Seat Count'] = INGRAM_MAX_SEAT_COUNT if sku_data['Max Seat Count'] >= INGRAM_MAX_SEAT_COUNT else sku_data['Max Seat Count']
+        self.om_new.loc[sku, 'Monthly Billing Model'] = 'Change Before Billing Period'
+        self.om_new.loc[sku, 'Monthly Billing Period'] = 'Monthly'
+        self.om_new.loc[sku, 'Annual Billing Model'] = 'Change Before Billing Period'
+        self.om_new.loc[sku, 'Annual Billing Period'] = 'Annual'
+        self.om_new.loc[sku, 'Description for CCPv2 Tile'] = sku_group_config[sku_group]['Description for CCPv2 Tile']
+
+
+
 
     def add_sku_description_translations(self, sku, sku_data):
         # Copy previous translations from last om or most recent version of the om 
