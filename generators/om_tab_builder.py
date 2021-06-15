@@ -29,6 +29,7 @@ class OMTabBuilder:
             self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group
             self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group
             self.om_new.loc[sku, 'Vendor ID'] = sku_group
+            self.om_new.loc[sku, 'Description for CCPv2 Tile'] = sku_group
         else:
             self.om_new.loc[sku, 'Global Menu Group'] = sku_group_config[sku_group]['Global Menu Group']
             self.om_new.loc[sku, 'Family'] = sku_group_config[sku_group]['OM Family']
@@ -36,6 +37,7 @@ class OMTabBuilder:
             self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group_config[sku_group]['Annual Plan Cat']
             self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group_config[sku_group]['Resource Cat']
             self.om_new.loc[sku, 'Vendor ID'] = sku_group_config[sku_group]['Vendor ID']
+            self.om_new.loc[sku, 'Description for CCPv2 Tile'] = sku_group_config[sku_group]['Description for CCPv2 Tile']
         
         self.om_new.loc[sku, 'Tax Category Name US'] = self.config['CSP_TAX_CAT_NAME_US']
         self.om_new.loc[sku, 'Tax Category Name Rest of World'] = self.config['CSP_TAX_CAT_NAME_WORLD']
@@ -47,7 +49,7 @@ class OMTabBuilder:
         self.om_new.loc[sku, 'Monthly Billing Period'] = 'Monthly'
         self.om_new.loc[sku, 'Annual Billing Model'] = 'Change Before Billing Period'
         self.om_new.loc[sku, 'Annual Billing Period'] = 'Annual'
-        self.om_new.loc[sku, 'Description for CCPv2 Tile'] = sku_group_config[sku_group]['Description for CCPv2 Tile']
+        
 
 
 
