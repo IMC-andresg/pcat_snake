@@ -352,7 +352,7 @@
 		}
 	},
 
-	"OM_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "In Next Month OM", "Manually Added", "Offer Display Name", "Provisioning ID", "Group", "Parent/Child", "CMP Category", "Parent Category",
+	"OM_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "In Next Month OM", "Manually Added", "Offer Display Name", "Provisioning ID", "Group", "Sub Group", "Parent/Child", "CMP Category", "Parent Category",
 		"Sales Category", "Description for CCPv2 Tile", "Tax Category", "Offer Type", "Duration", "Billing Frequency", "Monthly Billing Model", "Monthly Billing Period", "Annual Billing Model", 
 		"Annual Billing Period", "Min Seat Count", "Max Seat Count", "Ingram Max Seat Count", "Offer Limit", "Offer Limit Scope",
 		"Depends On", "Can Convert To", "Offer URI", "LearnMoreLink", "Offer Display Description", "Allowed Countries", "GUID + Offer Name",

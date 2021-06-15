@@ -18,15 +18,18 @@ class OMTabBuilder:
         self.translator = DeepLTranslator(config)
 
     def add_common_columns(self, sku, sku_data):
-        sku_group = self.om_new.loc[sku, 'Group']
+        sku_subgroup = self.om_new.loc[sku, 'Sub Group']
+        sku_group = sku_subgroup if self.om_new.loc[sku, 'Group'] == "Trials" else self.om_new.loc[sku, 'Group']
         sku_group_config = self.config['SKU_GROUPS']
-        if sku_group == self.config['DEFAULT_VALUES']['MICROSOFT_ERROR'] or sku_group == "Trials":
+
+        if sku_group == self.config['DEFAULT_VALUES']['MICROSOFT_ERROR']:
             self.om_new.loc[sku, 'Global Menu Group'] = sku_group
             self.om_new.loc[sku, 'Family'] = sku_group
             self.om_new.loc[sku, 'Plan Category Monthly (major group, billing, tax)'] = sku_group
             self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group
             self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group
             self.om_new.loc[sku, 'Vendor ID'] = sku_group
+            self.om_new.loc[sku, 'Description for CCPv2 Tile'] = sku_group
         else:
             self.om_new.loc[sku, 'Global Menu Group'] = sku_group_config[sku_group]['Global Menu Group']
             self.om_new.loc[sku, 'Family'] = sku_group_config[sku_group]['OM Family']
@@ -34,6 +37,8 @@ class OMTabBuilder:
             self.om_new.loc[sku, 'Plan Category Annual (major group, billing, tax)'] = sku_group_config[sku_group]['Annual Plan Cat']
             self.om_new.loc[sku, 'Resource Category (major group, industry, tax)'] = sku_group_config[sku_group]['Resource Cat']
             self.om_new.loc[sku, 'Vendor ID'] = sku_group_config[sku_group]['Vendor ID']
+            self.om_new.loc[sku, 'Description for CCPv2 Tile'] = sku_group_config[sku_group]['Description for CCPv2 Tile']
+        
         self.om_new.loc[sku, 'Tax Category Name US'] = self.config['CSP_TAX_CAT_NAME_US']
         self.om_new.loc[sku, 'Tax Category Name Rest of World'] = self.config['CSP_TAX_CAT_NAME_WORLD']
         self.om_new.loc[sku, 'Previous Months Shortened Names'] = sku_data['Offer Display Name']
@@ -44,7 +49,7 @@ class OMTabBuilder:
         self.om_new.loc[sku, 'Monthly Billing Period'] = 'Monthly'
         self.om_new.loc[sku, 'Annual Billing Model'] = 'Change Before Billing Period'
         self.om_new.loc[sku, 'Annual Billing Period'] = 'Annual'
-        self.om_new.loc[sku, 'Description for CCPv2 Tile'] = sku_group_config[sku_group]['Description for CCPv2 Tile']
+        
 
 
 
@@ -118,6 +123,7 @@ class OMTabBuilder:
             if sku in self.loader.om_last.index and self.loader.om_last.loc[sku, 'Group'] != self.config['DEFAULT_VALUES']['MICROSOFT_ERROR']:
                 self.om_new.loc[sku, 'In Last Month OM'] = self.config['DEFAULT_VALUES']['YES']
                 self.om_new.loc[sku, 'Group'] = self.loader.om_last.loc[sku, 'Group']
+                self.om_new.loc[sku, 'Sub Group'] = self.loader.om_last.loc[sku, 'Sub Group']
                 self.om_new.loc[sku, 'CMP Category'] = self.loader.om_last.loc[sku, 'CMP Category']
                 self.om_new.loc[sku, 'Parent Category'] = self.loader.om_last.loc[sku, 'Parent Category']
                 self.om_new.loc[sku, 'Sales Category'] = self.loader.om_last.loc[sku, 'Sales Category']
@@ -147,9 +153,10 @@ class OMTabBuilder:
                     self.om_new.loc[sku, 'Group'] = self.request_info('Group', list(self.config['SKU_GROUPS'].keys()) + [self.config['DEFAULT_VALUES']['MICROSOFT_ERROR']], sku, self.om_new.loc[sku, 'Offer Display Name'], self.om_new.loc[sku, 'In Two Months Ago PL'], self.om_new.loc[sku, 'In Last Month PL'], self.om_new.loc[sku, 'In current PL'], self.om_new.loc[sku, 'In Next Month PL'], self.loader.pl_current.loc[sku, 'License Agreement Type'] if sku in self.loader.pl_current.index else self.config['DEFAULT_VALUES']['NO'])
                     if self.om_new.loc[sku, 'Group'] in self.config['SKU_GROUPS']:
                         if self.om_new.loc[sku, 'Group'] == "Trials":
+                            self.om_new.loc[sku, 'Sub Group'] = self.request_info('Sub Group', list(self.config['SKU_GROUPS'].keys()-['Trials']) + [self.config['DEFAULT_VALUES']['MICROSOFT_ERROR']], sku, self.om_new.loc[sku, 'Offer Display Name'], self.om_new.loc[sku, 'In Two Months Ago PL'], self.om_new.loc[sku, 'In Last Month PL'], self.om_new.loc[sku, 'In current PL'], self.om_new.loc[sku, 'In Next Month PL'], self.loader.pl_current.loc[sku, 'License Agreement Type'] if sku in self.loader.pl_current.index else self.config['DEFAULT_VALUES']['NO'])
                             self.om_new.loc[sku, 'CMP Category'] = self.request_info('CMP Category', list(dict.fromkeys(self.loader.om_last['CMP Category'])), sku, self.om_new.loc[sku, 'Offer Display Name'], self.om_new.loc[sku, 'In Two Months Ago PL'], self.om_new.loc[sku, 'In Last Month PL'], self.om_new.loc[sku, 'In current PL'], self.om_new.loc[sku, 'In Next Month PL'], self.loader.pl_current.loc[sku, 'License Agreement Type'] if sku in self.loader.pl_current.index else self.config['DEFAULT_VALUES']['NO'])
-                            self.om_new.loc[sku, 'Parent Category'] = self.request_info('Parent Category', list(dict.fromkeys(self.loader.om_last['Parent Category'])), sku, self.om_new.loc[sku, 'Offer Display Name'], self.om_new.loc[sku, 'In Two Months Ago PL'], self.om_new.loc[sku, 'In Last Month PL'], self.om_new.loc[sku, 'In current PL'], self.om_new.loc[sku, 'In Next Month PL'], self.loader.pl_current.loc[sku, 'License Agreement Type'] if sku in self.loader.pl_current.index else self.config['DEFAULT_VALUES']['NO'])
-                            self.om_new.loc[sku, 'Sales Category'] = self.request_info('Sales Category', list(dict.fromkeys(self.loader.om_last['Sales Category'])), sku, self.om_new.loc[sku, 'Offer Display Name'], self.om_new.loc[sku, 'In Two Months Ago PL'], self.om_new.loc[sku, 'In Last Month PL'], self.om_new.loc[sku, 'In current PL'], self.om_new.loc[sku, 'In Next Month PL'], self.loader.pl_current.loc[sku, 'License Agreement Type'] if sku in self.loader.pl_current.index else self.config['DEFAULT_VALUES']['NO'])
+                            self.om_new.loc[sku, 'Parent Category'] = self.config['SKU_GROUPS'][self.om_new.loc[sku, 'Sub Group']]['Parent Category']
+                            self.om_new.loc[sku, 'Sales Category'] = self.config['SKU_GROUPS'][self.om_new.loc[sku, 'Sub Group']]['Sales Category'] if str(self.om_new.loc[sku, 'Parent/Child']) == "Parent" else "ADDON"          
                         else:
                             self.om_new.loc[sku, 'CMP Category'] = self.config['SKU_GROUPS'][self.om_new.loc[sku, 'Group']]['CMP Category'] if str(self.om_new.loc[sku, 'Parent/Child']) == "Parent" else "ADDON"
                             self.om_new.loc[sku, 'Parent Category'] = self.config['SKU_GROUPS'][self.om_new.loc[sku, 'Group']]['Parent Category']
@@ -167,6 +174,7 @@ class OMTabBuilder:
                         self.om_new.loc[sku, 'Sales Category'] = self.config['DEFAULT_VALUES']['MICROSOFT_ERROR']
                 else:
                     self.om_new.loc[sku, 'Group'] = self.loader.om_ghost.loc[sku, 'Group']
+                    self.om_new.loc[sku, 'Sub Group'] = self.loader.om_ghost.loc[sku, 'Group']
                     self.om_new.loc[sku, 'CMP Category'] = self.loader.om_ghost.loc[sku, 'CMP Category']
                     self.om_new.loc[sku, 'Parent Category'] = self.loader.om_ghost.loc[sku, 'Parent Category']
                     self.om_new.loc[sku, 'Sales Category'] = self.loader.om_ghost.loc[sku, 'Sales Category']
@@ -195,6 +203,7 @@ class OMTabBuilder:
                 self.om_new.loc[sku_in_last_not_in_current, 'Provisioning ID'] = self.loader.om_last.loc[sku_in_last_not_in_current, 'Provisioning ID']
                 self.om_new.loc[sku_in_last_not_in_current, 'Manually Added'] = self.config['DEFAULT_VALUES']['NO']
                 self.om_new.loc[sku_in_last_not_in_current, 'Group'] = self.loader.om_last.loc[sku_in_last_not_in_current, 'Group']
+                self.om_new.loc[sku_in_last_not_in_current, 'Sub Group'] = self.loader.om_last.loc[sku_in_last_not_in_current, 'Sub Group']
                 self.om_new.loc[sku_in_last_not_in_current, 'Parent/Child'] = self.loader.om_last.loc[sku_in_last_not_in_current, 'Parent/Child']
                 self.om_new.loc[sku_in_last_not_in_current, 'CMP Category'] = self.loader.om_last.loc[sku_in_last_not_in_current, 'CMP Category']
                 self.om_new.loc[sku_in_last_not_in_current, 'Parent Category'] = self.loader.om_last.loc[sku_in_last_not_in_current, 'Parent Category']
@@ -236,6 +245,7 @@ class OMTabBuilder:
                 self.om_new.loc[manual_sku, 'Provisioning ID'] = manual_sku_data['Provisioning ID']
                 self.om_new.loc[manual_sku, 'Manually Added'] = self.config['DEFAULT_VALUES']['YES']
                 self.om_new.loc[manual_sku, 'Group'] = manual_sku_data['Group']
+                self.om_new.loc[manual_sku, 'Sub Group'] = manual_sku_data['Sub Group']
                 self.om_new.loc[manual_sku, 'Parent/Child'] = manual_sku_data['Parent/Child']
                 self.om_new.loc[manual_sku, 'CMP Category'] = manual_sku_data['CMP Category']
                 self.om_new.loc[manual_sku, 'Parent Category'] = manual_sku_data['Parent Category']
@@ -279,14 +289,13 @@ class OMTabBuilder:
         return self.om_new
     
     def request_info(self, name, choices=None, sku=None, sku_name=None, sku_pl_two_months_ago=None, sku_pl_last_month=None, sku_pl_current=None, sku_pl_next_month=None, sku_license_type=None):
-        if name in ['Group', 'CMP Category', 'Parent Category', 'Sales Category']:
-            info = self.lookup_sku_group(sku)
+        if name in ['Group', 'CMP Category', 'Parent Category', 'Sales Category', 'Sub Group']:
+            info = self.lookup_sku_subgroup(sku) if name == 'Sub Group' else self.lookup_sku_group(sku)
             if info: return info
 
             choices.sort()
             info = ""
             while info not in choices:
-                # os.system('cls')
                 os.system('clear')
                 if info != "":
                     print("ERROR: Incorrect provided value. Please, select one from the list", end='\n\n')
@@ -295,7 +304,10 @@ class OMTabBuilder:
                 print(tabulate.tabulate([[sku_license_type, sku_pl_two_months_ago, sku_pl_last_month, sku_pl_current, sku_pl_next_month]], headers=['SKU license type', 'In Two Months Ago PL', 'In Last Month PL', 'In current PL', 'In Next Month PL'], tablefmt="psql", stralign="center"), end='\n\n')
                 print("Available options are:\n\n- {0}".format("\n- ".join(choices)), end='\n\n')
                 info = input("Selection: ").strip()
-            self.save_sku_group(sku, sku_name, info)
+            if name == 'Sub Group':
+                self.save_sku_subgroup(sku, sku_name, info)
+            else: 
+                self.save_sku_group(sku, sku_name, info)
             return info
         elif name in ['Shortened Names']:
             short_name = self.lookup_sku_shortname(sku)
@@ -314,6 +326,12 @@ class OMTabBuilder:
             self.save_sku_shortname(sku, sku_name, short_name)
             return short_name
     
+    def lookup_sku_subgroup(self, sku):
+        info_query = Query()
+        info_db_result = self.db.search((info_query.sku == sku) & (info_query.subgroup.exists()))
+        if info_db_result:
+            return info_db_result[0]['subgroup']
+
     def lookup_sku_group(self, sku):
         info_query = Query()
         info_db_result = self.db.search((info_query.sku == sku) & (info_query.group.exists()))
@@ -325,6 +343,10 @@ class OMTabBuilder:
         info_db_result = self.db.search((info_query.sku == sku) & (info_query.sku_short_name.exists()))
         if info_db_result:
             return info_db_result[0]['sku_short_name']
+
+    def save_sku_subgroup(self, sku, sku_name, subgroup):
+        upsert_query = Query()
+        self.db.upsert({'sku': sku, 'sku_name': sku_name, 'subgroup': subgroup}, upsert_query.sku == sku)
 
     def save_sku_group(self, sku, sku_name, group):
         upsert_query = Query()
