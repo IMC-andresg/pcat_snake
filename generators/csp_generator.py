@@ -238,16 +238,35 @@ class CSPGenerator:
             common_columns = {'License Type': self.config['SKU_GROUPS'][group]['License Type'], 'Ingram Group': self.config['SKU_GROUPS'][group]['Ingram Group'], 'Family': self.config['SKU_GROUPS'][group]['Family']}
             for sku, sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():
                 if sku_data['Duration'] in self.config['ALLOWED_DURATIONS'] or self.config['INCLUDE_LONG_TERM_SKUS']:
-                    self.aps_skus = self.aps_skus.append({**common_columns, 'OfferID': sku, 'Parent SKU + RelationID': sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': sku_data['Offer Display Name'], 'CMP Category': sku_data['CMP Category'], 'SKU In Last Month OM': sku_data['In Last Month OM'], 'Name Change': sku_data['Name Change']}, ignore_index=True)
+                    sku_rel_id = sku
+                    if sku_rel_id in self.loader.aps_skus_last['PPC Dup'].values:
+                        aps_skus_last_name = self.loader.aps_skus_last[self.loader.aps_skus_last['PPC Dup'] ==  sku_rel_id].iloc[0]['Name for Ingram']
+                    else:
+                        aps_skus_last_name = sku_data['Offer Display Name']
+                    self.aps_skus = self.aps_skus.append({'PPC Dup': sku,**common_columns, 'OfferID': sku,'Offer Name (From Microsoft Offers Matrix)':sku_data['Offer Display Name'],'Name for Ingram':sku_data['Offer Display Name'],'Old Offer Name':aps_skus_last_name, 'Parent SKU + RelationID': sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'],'CMP Category': sku_data['CMP Category'], 'SKU In Last Month OM': sku_data['In Last Month OM'],'Included Amount':1,'Lower Limit, Min Seat Count':sku_data['Min Seat Count'],'Max Amount Ingram':sku_data['Max Seat Count'],'Subscription Term':sku_data['Duration'],'Name Change': sku_data['Name Change']}, ignore_index=True)
                     if sku in list(dict.fromkeys(self.relations_current['ParentId'])):
                         addons_sku_list = list(dict.fromkeys(self.relations_current[self.relations_current['ParentId'] == sku]['ChildId']))
                         for relation_sku, relation_sku_data in self.relations_current[self.relations_current['ParentId'] == sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
-                            self.aps_skus = self.aps_skus.append({**common_columns, 'OfferID': relation_sku_data['ChildId'], 'RelationID': relation_sku, 'Parent SKU + RelationID': sku + relation_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': relation_sku_data['ChildName'], 'CMP Category': self.om_new.loc[relation_sku_data['ChildId'], 'CMP Category'], 'SKU In Last Month OM': self.om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': relation_sku_data['Last Month'], 'Name Change': self.om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
+                            if relation_sku_data['ChildId'] in self.config['COUNTRY_SPECIFIC_SKU']:
+                                country_specific_name = self.config['COUNTRY_SPECIFIC_SKU'][relation_sku_data['ChildId']]
+                            else:
+                                country_specific_name = relation_sku_data['ChildId']
+                            sku_rel_id = sku + relation_sku
+                            if sku_rel_id in self.loader.aps_skus_last['PPC Dup'].values:
+                                aps_skus_last_name = self.loader.aps_skus_last[self.loader.aps_skus_last['PPC Dup'] ==  sku_rel_id].iloc[0]['Name for Ingram']
+                            else:
+                                aps_skus_last_name = country_specific_name
+                            self.aps_skus = self.aps_skus.append({'PPC Dup': sku + relation_sku,**common_columns, 'OfferID': relation_sku_data['ChildId'],'Offer Name (From Microsoft Offers Matrix)':relation_sku_data['ChildName'],'Name for Ingram':country_specific_name,'Old Offer Name':aps_skus_last_name, 'RelationID': relation_sku, 'Parent SKU + RelationID': sku + relation_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'CMP Category': self.om_new.loc[relation_sku_data['ChildId'], 'CMP Category'], 'SKU In Last Month OM': self.om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': relation_sku_data['Last Month'], 'Included Amount':0,'Lower Limit, Min Seat Count':sku_data['Min Seat Count'],'Max Amount Ingram':sku_data['Max Seat Count'],'Subscription Term':sku_data['Duration'],'Name Change': self.om_new.loc[relation_sku_data['ChildId'], 'Name Change']}, ignore_index=True)
                             if relation_sku_data['ChildId'] in list(dict.fromkeys(self.relations_current['ParentId'])):
                                 for addon_to_addon_sku, addon_to_addon_data in self.relations_current[self.relations_current['ParentId'] == relation_sku_data['ChildId']].sort_values(by=['ChildName', 'ChildId']).iterrows():
-                                    if addon_to_addon_data['ChildId'] not in addons_sku_list and self.config['REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS']:
+                                   if addon_to_addon_data['ChildId'] not in addons_sku_list and self.config['REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS']:
                                         addon_to_addon_offer_name = addon_to_addon_data['ChildName'] + " for " + addon_to_addon_data['ParentName']
-                                        self.aps_skus = self.aps_skus.append({**common_columns, 'OfferID': addon_to_addon_data['ChildId'], 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'Parent Name Short': sku_data['Shortened Names'], 'Offer Display Name': addon_to_addon_offer_name, 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': self.om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'], 'Name Change': self.om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
+                                        sku_rel_id = sku + addon_to_addon_sku
+                                        if sku_rel_id in self.loader.aps_skus_last['PPC Dup'].values:
+                                            aps_skus_last_name = self.loader.aps_skus_last[self.loader.aps_skus_last['PPC Dup'] ==  sku_rel_id].iloc[0]['Name for Ingram']
+                                        else:
+                                            aps_skus_last_name = addon_to_addon_offer_name
+                                        self.aps_skus = self.aps_skus.append({'PPC Dup': sku + addon_to_addon_sku,**common_columns, 'OfferID': addon_to_addon_data['ChildId'],'Offer Name (From Microsoft Offers Matrix)':sku_data['Offer Display Name'],'Name for Ingram':addon_to_addon_offer_name,'Old Offer Name':aps_skus_last_name, 'RelationID': addon_to_addon_sku, 'Parent SKU + RelationID': sku + addon_to_addon_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'CMP Category': 'ADDON to ADDON', 'SKU In Last Month OM': self.om_new.loc[addon_to_addon_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': addon_to_addon_data['Last Month'],'Included Amount':0,'Lower Limit, Min Seat Count':sku_data['Min Seat Count'],'Max Amount Ingram':sku_data['Max Seat Count'],'Subscription Term':sku_data['Duration'], 'Name Change': self.om_new.loc[addon_to_addon_data['ChildId'], 'Name Change']}, ignore_index=True)
         self.cat_lic_type = CategoricalDtype(['Corporate','Education','Charity','Trial','Government'],ordered=True)
         self.cat_ingram_group = CategoricalDtype(['O365','EM+S','Windows','M365','D365','Trial'],ordered=True)
         self.aps_skus['License Type'] = self.aps_skus['License Type'].astype(self.cat_lic_type)
@@ -294,6 +313,8 @@ class CSPGenerator:
             self.om_del_this_month.to_excel(writer, sheet_name='DEL this month')
             self.om_name_changes_this_month.to_excel(writer, sheet_name='Name Changes')
             self.om_microsoft_errors.to_excel(writer, sheet_name='Microsoft Errors')
-            self.country_availability.to_excel(writer, sheet_name='Microsoft Country availability', index_label='OfferId')
+            self.country_availability.to_excel(writer, sheet_name='Microsoft Country availability', index_label='OfferId')            
             self.aps_skus.to_excel(writer, sheet_name='APS SKUs', index_label='Overall Index')
+            self.loader.aps_skus_last.to_excel(writer, sheet_name='APS SKUs Last', index_label='Overall Index')
             self.connect_skus.to_excel(writer, sheet_name='Connect SKUs', index_label='Overall Index')
+            

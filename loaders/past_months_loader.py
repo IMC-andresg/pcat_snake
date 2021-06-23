@@ -48,6 +48,7 @@ class PastMonthsLoader:
         self.om_current = pandas.read_excel(self.OM_THIS_MONTH_PATH, sheet_name='Office_Dynamics_Windows_Intune', index_col=1)
         self.om_last = pandas.read_excel(self.OM_LAST_MONTH_PATH, sheet_name='OM', index_col=0)
         self.om_two_months = pandas.read_excel(self.OM_TWO_MONTHS_PATH, sheet_name='OM', index_col=0)
+        self.aps_skus_last = pandas.read_excel(self.OM_LAST_MONTH_PATH, sheet_name='APS SKUs', index_col=0)
 
         self.ghost_file = Path(self.OM_OUTPUT_PATH)
         if self.ghost_file.is_file():

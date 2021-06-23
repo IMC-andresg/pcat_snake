@@ -12,7 +12,7 @@
 	"REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS": true,
 	"REMOVE_CORPORATE_ADDONS_WHEN_CHARITY_EXISTS": true,
 
-	"ALLOWED_DURATIONS": ["1 Month", "6 Months", "1 Year", "6 Years"],
+	"ALLOWED_DURATIONS": ["1 Month", "6 Months", "1 Year","3 Years", "6 Years"],
 
 	"ALLOWED_RELATIONS": {
 		"Corporate": ["Corporate"],
@@ -373,8 +373,8 @@
 	"COUNTRIES_HEADERS": ["Last Month", "New Offer ID", "In OM", "New Country", "CMP", "In Next Month", "Offer Next Month", 
 		"Country Change Next Month", "OfferID", "OfferName", "Country", "Group", "Parent/Child", "CMP Category", "Parent Category", "Sales Category"],
 
-	"APS_STRUCTURE_HEADERS": ["License Type", "Family", "Ingram Group", "Index", "OfferID", "RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "Parent Name Short", "Offer Display Name", "CMP Category",
-		"SKU In Last Month OM", "Relation In Last Month", "Name Change"],
+	"APS_STRUCTURE_HEADERS": ["PPC Dup","License Type", "Family", "Ingram Group", "Index","PMA", "OfferID","Offer Name (From Microsoft Offers Matrix)","Name for Ingram","Old Offer Name","RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "CMP Category","Included Amount","Lower Limit, Min Seat Count","Max Amount Ingram",
+		"Subscription Term","SKU In Last Month OM", "Relation In Last Month", "Name Change"],
 
 	"SW_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "Offer Display Name", "Group", "Parent/Child", "CMP Category", "Parent Category",
 		"Sales Category", "Tax Category", "Duration", "Billing Frequency", "Min Seat Count", "Max Seat Count", "Allowed Countries", "Shortened Names",
@@ -403,8 +403,8 @@
 		}
 	},
 
-	"CONNECT_TOKEN": "ApiKey INSERT-YOUR-CONNECT-API-KEY-HERE",
-	"DEEPL_AUTH_KEY": "INSERT-DEEPL-API-KEY-HERE",
+	"CONNECT_TOKEN": "",
+	"DEEPL_AUTH_KEY": "",
 
 	"CONNECT_URLS": {
 		"ITEMS": "https://api.connect.cloud.im/public/v1/products/<PRODUCT_ID>/items", 
@@ -433,5 +433,9 @@
 		"CORPORATE": "CORPORATE",
 		"YEARLY": "yearly",
 		"MONTHLY": "monthly"
+	},
+
+	"COUNTRY_SPECIFIC_SKU":{
+		"c94271d8-b431-4a25-a3c5-a57737a1c909":"Microsoft 365 Audio Conferencing UK"
 	}
 }
