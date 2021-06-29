@@ -374,7 +374,8 @@
 		"Country Change Next Month", "OfferID", "OfferName", "Country", "Group", "Parent/Child", "CMP Category", "Parent Category", "Sales Category"],
 
 	"APS_STRUCTURE_HEADERS": ["PPC Dup","License Type", "Family", "Ingram Group", "Index","PMA", "OfferID","Offer Name (From Microsoft Offers Matrix)","Name for Ingram","Old Offer Name","RelationID", "Parent SKU + RelationID", "Parent SKU", "Parent Name", "CMP Category","Included Amount","Lower Limit, Min Seat Count","Max Amount Ingram",
-		"Subscription Term","SKU In Last Month OM", "Relation In Last Month", "Name Change"],
+		"Unit","Subscription Term","SKU In Last Month OM", "Relation In Last Month", "Name Change","New Relation","Delete",
+		"Brazil","Canada","Chile","Colombia","Mexico","United States","Australia","New Zealand","Hong Kong SAR","India","Malaysia","Singapore","Austria","Belgium","Switzerland","Germany","Spain","France","Italy","United Arab Emirates","Netherlands","Sweden","Turkey","United Kingdom","Morocco","Norway","Saudi Arabia"],
 
 	"SW_HEADERS": ["In Two Months Ago OM", "In Last Month OM", "Offer Display Name", "Group", "Parent/Child", "CMP Category", "Parent Category",
 		"Sales Category", "Tax Category", "Duration", "Billing Frequency", "Min Seat Count", "Max Seat Count", "Allowed Countries", "Shortened Names",
@@ -436,6 +437,17 @@
 	},
 
 	"COUNTRY_SPECIFIC_SKU":{
-		"c94271d8-b431-4a25-a3c5-a57737a1c909":"Microsoft 365 Audio Conferencing UK"
-	}
+		"0d8bb003-0eb9-48ff-8159-346edc9db85a":"Microsoft 365 Business Voice (Nonprofit Staff Pricing) CA",		
+		"1a6f0ea8-c2f2-4de2-801d-434cc782f0a3":"Microsoft 365 Business Voice (Nonprofit Staff Pricing) UK",
+		"5dfab542-1a4b-4b00-9fa8-d6f6beed9509":"Microsoft 365 Business Voice (without calling plan) (Nonprofit Staff Pricing) CA",
+		"984d3230-b916-4aed-acc1-5522085d24b1":"Microsoft 365 Business Voice (without calling plan) UK",		
+		"27162687-feea-4d5a-8888-36a6c15add34":"Microsoft 365 Business Voice UK",
+		"2fc79cbc-5db1-4e1f-ac16-95e420cb86a0":"Microsoft 365 Business Voice CA",
+		"dad393d5-5f4c-443c-95ce-240b687bd255":"Microsoft 365 Business Voice (without calling plan) CA",
+		"b71df433-6fd9-4549-886d-577f7aa06070":"Microsoft 365 Business Voice (without calling plan) Adoption Promo CA",
+		"e7d1d0fa-b769-45c7-aaea-c3e6f7402691":"Microsoft 365 Business Voice Adoption Promo UK",	
+		"ef3ff6bb-a288-4a56-9204-97b37ff9a0b8":"Microsoft 365 Business Voice Adoption Promo CA"	
+	},
+	"COUNTRY_LIST":["Brazil","Canada","Chile","Colombia","Mexico","United States","Australia","New Zealand","Hong Kong SAR","India","Malaysia","Singapore","Austria","Belgium","Switzerland","Germany","Spain","France","Italy","United Arab Emirates","Netherlands","Sweden","Turkey","United Kingdom","Morocco","Norway","Saudi Arabia"],
+	"PSTN_EXCLUDED_COUNTRY":["Chile","Colombia","Australia","Malaysia","United Arab Emirates","Saudi Arabia"]	
 }
