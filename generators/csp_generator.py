@@ -7,6 +7,7 @@ from generators.om_tab_builder import OMTabBuilder
 
 
 # Generates CSP License Based output file
+#"DEEPL_AUTH_KEY": "a8c942c6-8a3e-9cf5-ef6a-516475110800:fx" (Ahmed)
 class CSPGenerator:
 
     def __init__(self, config, loader, connect_items):
@@ -241,7 +242,9 @@ class CSPGenerator:
             common_columns = {'License Type': license_type, 'Ingram Group': self.config['SKU_GROUPS'][group]['Ingram Group'], 'Family': self.config['SKU_GROUPS'][group]['Family']}
             country_specific_name =''            
             name_change = ''     
-            sku_rel_id_parent = ''       
+            sku_rel_id_parent = ''
+            sku_rel_id_base = ''                   
+            sku_rel_id_addon = ''
             for sku, sku_data in om_new_filtered[om_new_filtered['Parent/Child'] == 'Parent'].iterrows():                
                 if sku_data['Duration'] in self.config['ALLOWED_DURATIONS'] or self.config['INCLUDE_LONG_TERM_SKUS']:
                     # Calculating MAX seat count for Ingram
@@ -260,11 +263,12 @@ class CSPGenerator:
                         name_change = 'NO'                                               
                     additional_column = {'PPC Dup': sku,**common_columns, 'OfferID': sku,'Offer Name (From Microsoft Offers Matrix)':sku_data['Offer Display Name'],'Name for Ingram':sku_data['Offer Display Name'],'Old Offer Name':aps_skus_last_name, 'Parent SKU + RelationID': sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'],'CMP Category': sku_data['CMP Category'], 'SKU In Last Month OM': sku_data['In Last Month OM'],'Included Amount':1,'Lower Limit, Min Seat Count':sku_data['Min Seat Count'],'Max Amount Ingram':max_im_seat_count,'Unit':'User','Subscription Term':sku_data['Duration'],'Name Change': name_change}
                     self.build_country_boxes('parent',additional_column,sku_rel_id,sku,license_type,sku_rel_id_parent)
-                    sku_rel_id_parent = sku_rel_id
+                    sku_rel_id_base = sku_rel_id                    
                     if sku in list(dict.fromkeys(self.relations_current['ParentId'])):
                         addons_sku_list = list(dict.fromkeys(self.relations_current[self.relations_current['ParentId'] == sku]['ChildId']))
                         for relation_sku, relation_sku_data in self.relations_current[self.relations_current['ParentId'] == sku].sort_values(by=['ChildName', 'ChildId']).iterrows():
                             #Rows for Addon Plan
+                            sku_rel_id_parent = sku_rel_id_base
                             if relation_sku_data['ChildId'] in self.config['COUNTRY_SPECIFIC_SKU']:
                                 country_specific_name = self.config['COUNTRY_SPECIFIC_SKU'][relation_sku_data['ChildId']]
                             else:
@@ -281,10 +285,11 @@ class CSPGenerator:
                                 name_change = 'NO'                    
                             additional_column = {'PPC Dup': sku + relation_sku,**common_columns, 'OfferID': relation_sku_data['ChildId'],'Offer Name (From Microsoft Offers Matrix)':relation_sku_data['ChildName'],'Name for Ingram':country_specific_name,'Old Offer Name':aps_skus_last_name, 'RelationID': relation_sku, 'Parent SKU + RelationID': sku + relation_sku, 'Parent SKU': sku, 'Parent Name': sku_data['Offer Display Name'], 'CMP Category': self.om_new.loc[relation_sku_data['ChildId'], 'CMP Category'], 'SKU In Last Month OM': self.om_new.loc[relation_sku_data['ChildId'], 'In Last Month OM'], 'Relation In Last Month': relation_sku_data['Last Month'], 'Included Amount':0,'Lower Limit, Min Seat Count':sku_data['Min Seat Count'],'Max Amount Ingram':max_im_seat_count,'Unit':'User','Subscription Term':sku_data['Duration'],'Name Change': name_change}
                             self.build_country_boxes('addon',additional_column,sku_rel_id,sku,license_type,sku_rel_id_parent) 
-                            sku_rel_id_parent = sku_rel_id                   
+                            sku_rel_id_addon = sku_rel_id                                               
                             if relation_sku_data['ChildId'] in list(dict.fromkeys(self.relations_current['ParentId'])):
                                 for addon_to_addon_sku, addon_to_addon_data in self.relations_current[self.relations_current['ParentId'] == relation_sku_data['ChildId']].sort_values(by=['ChildName', 'ChildId']).iterrows():
                                    #Rows for Addon to Addon Plan
+                                   sku_rel_id_parent = sku_rel_id_addon
                                    if addon_to_addon_data['ChildId'] not in addons_sku_list and self.config['REMOVE_ADDONS2ADDONS_IF_ADDON_EXISTS']:
                                         addon_to_addon_offer_name = addon_to_addon_data['ChildName'] + " for " + country_specific_name
                                         sku_rel_id = sku + addon_to_addon_sku
@@ -332,10 +337,9 @@ class CSPGenerator:
                                 if parent_data_check in ['Existing In Country', 'Add If Available']: 
                                     country_value = 'Add If Available'
                                 else:
-                                    country_value = 'NO'
-                                        
+                                    country_value = 'NO'                                        
                             elif plan_type == "addon2addon": 
-                                parent_data_check = self.aps_skus[self.aps_skus['PPC Dup'] ==  sku_rel_id_parent].iloc[0][country]
+                                parent_data_check = self.aps_skus[self.aps_skus['PPC Dup'] == sku_rel_id_parent].iloc[0][country]
                                 if parent_data_check in ['Existing In Country', 'Add If Available']:
                                     country_value = 'Add If Available'
                                 else:
